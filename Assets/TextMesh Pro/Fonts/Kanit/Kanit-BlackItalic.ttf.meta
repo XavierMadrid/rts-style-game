@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 6e6f25bc6c56f4d43b1ff05d5868fdcf
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Kanit Black
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 72812539bd6254d5caac3909b3d394c7, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
