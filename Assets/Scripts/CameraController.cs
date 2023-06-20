@@ -2,18 +2,38 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
     [Range(0, 100)]
     [SerializeField] private float screenScrollSpeed = 35f;
+    [SerializeField] private GameObject backgroundImage = null;
 
+    private readonly float scrollSpeedScale = .1f; // OPTION
+    private float camSize;
+    public float CamSize
+    {
+        get => camSize;
+        private set
+        {
+            camSize = Mathf.Clamp(value, 15f, 50f);
+            cam.orthographicSize = camSize;
+        }
+    }
+    private bool paused = false;
+    private PlayerControls playerControls;
+    private InputAction scrollValue;
+    private InputAction spaceBar;
+    private InputAction escape;
+    
     private Camera cam;
 
-    private float scrollSpeedScale = .1f;
-    private float lastScrollVal;
-    
-    [SerializeField] private GameObject backgroundImage = null;
+
+    private void Awake()
+    {
+        playerControls = new PlayerControls();
+    }
 
     private void Start()
     {
@@ -52,14 +72,43 @@ public class CameraController : MonoBehaviour
             backgroundImage.transform.Translate(Time.deltaTime * screenScrollSpeed * xCloseness * 0.95f * Vector3.left, Space.World);
         }
 
-        float camSize = cam.orthographicSize;
-        camSize += Input.mouseScrollDelta.y * scrollSpeedScale;
-        cam.orthographicSize = Mathf.Clamp(camSize, 15f, 30f);
+        camSize = cam.orthographicSize;
+        camSize += scrollValue.ReadValue<Vector2>().y * scrollSpeedScale;
 
-        if (Input.GetKeyDown(KeyCode.C))
+        spaceBar.performed += CenterCamera;
+        escape.performed += PauseGame;
+    }
+
+    private void PauseGame(InputAction.CallbackContext context) // this pause is terrible. make it disable all necessary inputs and actually work
+    {
+        if (!paused)
         {
-            transform.position = new Vector3(0, 0, -10);
-            backgroundImage.transform.position = new Vector3(0, 0, 1);
+            paused = true;
+            Time.timeScale = 0;
         }
+        else
+        {
+            paused = false;
+            Time.timeScale = 1;
+        }
+    }
+    
+    private void CenterCamera(InputAction.CallbackContext context)
+    {
+        transform.position = new Vector3(0, 0, -10);
+        backgroundImage.transform.position = new Vector3(0, 0, 1);
+    }
+    
+    private void OnEnable()
+    {
+        scrollValue = playerControls.UIActions.FieldOfViewZoom;
+        spaceBar = playerControls.UIActions.CenterCamera;
+        escape = playerControls.UIActions.Pause;
+        playerControls.UIActions.Enable();
+    }
+
+    private void OnDisable()
+    {
+        playerControls.UIActions.Disable();
     }
 }

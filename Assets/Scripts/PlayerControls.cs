@@ -280,6 +280,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FieldOfViewZoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""94726680-d458-4579-bb39-68ff0ef6b548"",
+                    ""expectedControlType"": ""Delta"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CenterCamera"",
+                    ""type"": ""Button"",
+                    ""id"": ""c321ee4b-133c-4617-8435-3d5ff754dae9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -302,6 +320,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f6b0111a-992a-4188-ad73-80db2893eefc"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FieldOfViewZoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""431b2ad9-43bc-4782-9a50-85b103c28d18"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CenterCamera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -329,6 +369,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_UIActions = asset.FindActionMap("UIActions", throwIfNotFound: true);
         m_UIActions_DisplayExtraInfo = m_UIActions.FindAction("DisplayExtraInfo", throwIfNotFound: true);
         m_UIActions_Pause = m_UIActions.FindAction("Pause", throwIfNotFound: true);
+        m_UIActions_FieldOfViewZoom = m_UIActions.FindAction("FieldOfViewZoom", throwIfNotFound: true);
+        m_UIActions_CenterCamera = m_UIActions.FindAction("CenterCamera", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -556,12 +598,16 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IUIActionsActions> m_UIActionsActionsCallbackInterfaces = new List<IUIActionsActions>();
     private readonly InputAction m_UIActions_DisplayExtraInfo;
     private readonly InputAction m_UIActions_Pause;
+    private readonly InputAction m_UIActions_FieldOfViewZoom;
+    private readonly InputAction m_UIActions_CenterCamera;
     public struct UIActionsActions
     {
         private @PlayerControls m_Wrapper;
         public UIActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @DisplayExtraInfo => m_Wrapper.m_UIActions_DisplayExtraInfo;
         public InputAction @Pause => m_Wrapper.m_UIActions_Pause;
+        public InputAction @FieldOfViewZoom => m_Wrapper.m_UIActions_FieldOfViewZoom;
+        public InputAction @CenterCamera => m_Wrapper.m_UIActions_CenterCamera;
         public InputActionMap Get() { return m_Wrapper.m_UIActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -577,6 +623,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
+            @FieldOfViewZoom.started += instance.OnFieldOfViewZoom;
+            @FieldOfViewZoom.performed += instance.OnFieldOfViewZoom;
+            @FieldOfViewZoom.canceled += instance.OnFieldOfViewZoom;
+            @CenterCamera.started += instance.OnCenterCamera;
+            @CenterCamera.performed += instance.OnCenterCamera;
+            @CenterCamera.canceled += instance.OnCenterCamera;
         }
 
         private void UnregisterCallbacks(IUIActionsActions instance)
@@ -587,6 +639,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
+            @FieldOfViewZoom.started -= instance.OnFieldOfViewZoom;
+            @FieldOfViewZoom.performed -= instance.OnFieldOfViewZoom;
+            @FieldOfViewZoom.canceled -= instance.OnFieldOfViewZoom;
+            @CenterCamera.started -= instance.OnCenterCamera;
+            @CenterCamera.performed -= instance.OnCenterCamera;
+            @CenterCamera.canceled -= instance.OnCenterCamera;
         }
 
         public void RemoveCallbacks(IUIActionsActions instance)
@@ -625,5 +683,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnDisplayExtraInfo(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnFieldOfViewZoom(InputAction.CallbackContext context);
+        void OnCenterCamera(InputAction.CallbackContext context);
     }
 }
