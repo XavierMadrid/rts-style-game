@@ -101,7 +101,7 @@ public class HexBuilder : MonoBehaviour
     {
         if (BuildMode)
         {
-            hexPos = mainCam.ScreenToWorldPoint(playerControls.HexBuildingActions.MousePosition.ReadValue<Vector2>()).SnapWorld();
+            hexPos = mainCam.ScreenToWorldPoint(mousePosition.ReadValue<Vector2>()).SnapWorld();
             hexPos = new Vector3(hexPos.x, hexPos.y, -2);
             bluePrintHex.transform.position = hexPos;
             
@@ -224,7 +224,7 @@ public class HexBuilder : MonoBehaviour
 
     private void OnBuildMode()
     {
-        Vector3 hexPos = mainCam.ScreenToWorldPoint(playerControls.HexBuildingActions.MousePosition.ReadValue<Vector2>());
+        Vector3 hexPos = mainCam.ScreenToWorldPoint(mousePosition.ReadValue<Vector2>());
         hexPos = new Vector3(hexPos.x, hexPos.y, 0);
         
         bluePrintHex = Instantiate(hexExample, hexPos, Quaternion.identity);

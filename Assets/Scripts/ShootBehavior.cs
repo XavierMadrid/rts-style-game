@@ -37,8 +37,6 @@ public class ShootBehavior : MonoBehaviour
         {
             yield return searchDelayInterval;
             
-            Debug.Log("Researched.");
-            
             Vector3 currentPos = transform.position;
 
             ObservableCollection<GameObject> ships = isEnemy

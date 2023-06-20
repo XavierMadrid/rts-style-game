@@ -52,7 +52,7 @@ public class ShipUnitBehavior : ShipBehavior
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
-        mainCam = ManagerReferences.Instance.ShipController.MainCam;
+        mainCam = ManagerReferences.Instance.MainCamera;
         col2D = GetComponent<Collider2D>();
         
         noFilter = new ContactFilter2D();

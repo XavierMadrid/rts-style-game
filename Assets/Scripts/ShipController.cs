@@ -1,19 +1,22 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.U2D.Path;
+using UnityEngine.InputSystem;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class ShipController : MonoBehaviour
 {
-    public static bool ExtendStats = false;
+    private PlayerControls playerControls;
+    private InputAction mousePosition;
+    private InputAction leftClick;
+    private InputAction leftClickHold;
     
+    public static bool ExtendStats = false;
+
+    private float clickSelectionRange = 15f;
     private bool mouseHeldDown;
     private GameObject selectionCircleClone;
+    private Camera mainCam;
     
     private Vector3 circlePoint1;
     private Vector3 circlePoint2;
@@ -21,23 +24,24 @@ public class ShipController : MonoBehaviour
     private Collider2D[] shipColliders = new Collider2D[10];
     
     [SerializeField] private Color selectedCircleColor;
-    
     [SerializeField] private GameObject selectionCircle = null;
     [SerializeField] private GameObject shipUnit = null;
-    [SerializeField] private Camera mainCam = null;
-    [SerializeField] private HexBuilder hexBuildercs = null;
 
     public ObservableCollection<GameObject> ShipUnits = new();
-    
-    public Camera MainCam { get; private set; }
     
     private ContactFilter2D shipsFilter;
     
     // Start is called before the first frame update
     void Awake()
     {
-        MainCam = mainCam;
         shipsFilter = new ContactFilter2D() {useLayerMask = true, layerMask = LayerMask.GetMask("ShipUnits") };
+        
+        playerControls = new PlayerControls();
+    }
+
+    private void Start()
+    {
+        mainCam = ManagerReferences.Instance.MainCamera;
     }
 
     // Update is called once per frame
@@ -52,54 +56,58 @@ public class ShipController : MonoBehaviour
             ShipUnits.Add(shipUnitClone);
         }
 
-        if (hexBuildercs.BuildMode) return; // change to event to prevent this check every frame
+        if (ManagerReferences.Instance.HexBuilder.BuildMode) return; // change to event to prevent this check every frame
 
         if (mouseHeldDown)
         {
-            circlePoint2 = mainCam.ScreenToWorldPoint(Input.mousePosition);
+            circlePoint2 = mainCam.ScreenToWorldPoint(mousePosition.ReadValue<Vector2>());
             Vector3 midpoint = circlePoint1 + (circlePoint2 - circlePoint1) * .5f;
             float radius = Vector2.Distance(circlePoint1, circlePoint2) * .5f;
             selectionCircleClone.transform.position = midpoint;
             selectionCircleClone.transform.localScale = new Vector3(radius, radius, 1);
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            circlePoint1 = mainCam.ScreenToWorldPoint(Input.mousePosition);
-            circlePoint1 = new Vector3(circlePoint1.x, circlePoint1.y, -3);
-            selectionCircleClone = Instantiate(selectionCircle, circlePoint1, Quaternion.identity);
-            mouseHeldDown = true;
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            mouseHeldDown = false;
-
-            circlePoint2 = mainCam.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 midpoint = circlePoint1 + (circlePoint2 - circlePoint1) * .5f;
-            float radius = Vector2.Distance(circlePoint1, circlePoint2) * .5f;
-            selectionCircleClone.transform.position = midpoint;
-            selectionCircleClone.transform.localScale = new Vector3(radius, radius, 1);
-            StartCoroutine(SelectionCircleVFX(selectionCircleClone));
-
-            Array.Clear(shipColliders, 0, shipColliders.Length);
-
-            if (radius >= 1)
-            {
-                Physics2D.OverlapCircle(midpoint, radius, shipsFilter, shipColliders);
-                SelectShips(shipColliders, midpoint);
-            }
-            else // select nearest ship within 15 units
-            {
-                Physics2D.OverlapCircle(midpoint, 15f, shipsFilter, shipColliders);
-                SelectClosestShip(shipColliders, circlePoint1);
-            }
-        }
+        leftClick.performed += BeginShipSelecting;
+        leftClick.canceled += ChooseShipSelectionProcess;
     }
 
+    private void BeginShipSelecting(InputAction.CallbackContext context)
+    {
+        circlePoint1 = mainCam.ScreenToWorldPoint(mousePosition.ReadValue<Vector2>());
+        circlePoint1 = new Vector3(circlePoint1.x, circlePoint1.y, -3);
+        selectionCircleClone = Instantiate(selectionCircle, circlePoint1, Quaternion.identity);
+        mouseHeldDown = true;
+    }
+
+    private void ChooseShipSelectionProcess(InputAction.CallbackContext context)
+    {
+        mouseHeldDown = false;
+
+        circlePoint2 = mainCam.ScreenToWorldPoint(mousePosition.ReadValue<Vector2>());
+        Vector3 midpoint = circlePoint1 + (circlePoint2 - circlePoint1) * .5f;
+        float radius = Vector2.Distance(circlePoint1, circlePoint2) * .5f;
+        selectionCircleClone.transform.position = midpoint;
+        selectionCircleClone.transform.localScale = new Vector3(radius, radius, 1);
+            
+        StartCoroutine(SelectionCircleVFX(selectionCircleClone));
+
+        Array.Clear(shipColliders, 0, shipColliders.Length);
+
+        if (radius >= 1)
+        {
+            Physics2D.OverlapCircle(midpoint, radius, shipsFilter, shipColliders);
+            SelectShips(shipColliders, midpoint);
+        }
+        else // select nearest ship within 15 units
+        {
+            Physics2D.OverlapCircle(midpoint, clickSelectionRange, shipsFilter, shipColliders);
+            SelectClosestShip(shipColliders, circlePoint1);
+        }
+    }
+    
     private void SelectClosestShip(Collider2D[] shipColliders, Vector3 clickPos)
     {
-        float shortestDist = 250f; // because 15^2 is 225
+        float shortestDist = clickSelectionRange * clickSelectionRange + 5; // because 15^2 is 225
         GameObject closestShip = null;
         foreach (var shipCol in shipColliders)
         {
@@ -150,5 +158,18 @@ public class ShipController : MonoBehaviour
         }
 
         Destroy(circle);
+    }
+
+    private void OnEnable()
+    {
+        mousePosition = playerControls.ShipControlActions.MousePosition;
+        leftClick = playerControls.ShipControlActions.SelectShip;
+        leftClickHold = playerControls.ShipControlActions.DragSelectShips;
+        playerControls.ShipControlActions.Enable();
+    }
+
+    private void OnDisable()
+    {
+        playerControls.ShipControlActions.Disable();;
     }
 }
