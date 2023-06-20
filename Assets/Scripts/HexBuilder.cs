@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,7 +9,17 @@ public class HexBuilder : MonoBehaviour
 {
     [SerializeField] private Camera mainCam = null;
     [SerializeField] private GameObject hexExample = null;
-    
+
+    private PlayerControls playerControls = null;
+    private InputAction mousePosition;
+    private InputAction leftClick;
+    private InputAction rightClick;
+    private InputAction gateHexInputAction;
+    private InputAction powerHexInputAction;
+    private InputAction workshopHexInputAction;
+    private InputAction goldmineHexInputAction;
+    private InputAction starCollectorHexInputAction;
+
     private static readonly Color CenterHexColor = new(.729f, .820f, 1, 1);
     private static readonly Color GateHexColor = new(.3208f, .3208f, .3208f, .6471f);
     private static readonly Color PowerHexColor = new(0, 0.5764f, 1, 1);
@@ -46,6 +56,8 @@ public class HexBuilder : MonoBehaviour
     private ResourcePrice[] resourcePrices;
     private GameObject bluePrintHex;
     private SpriteRenderer bluePrintHexsr;
+    private Vector3 hexPos;
+    
     private bool resetColor;
     private bool buildMode;
     private bool hexPlaceFailure;
@@ -72,6 +84,11 @@ public class HexBuilder : MonoBehaviour
 
     private WaitForSeconds redDuration = new WaitForSeconds(.10f);
 
+    private void Awake()
+    {
+        playerControls = new PlayerControls();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -84,87 +101,132 @@ public class HexBuilder : MonoBehaviour
     {
         if (BuildMode)
         {
-            Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition).SnapWorld();
-            mousePos = new Vector3(mousePos.x, mousePos.y, -2);
-            bluePrintHex.transform.position = mousePos;
+            hexPos = mainCam.ScreenToWorldPoint(playerControls.HexBuildingActions.MousePosition.ReadValue<Vector2>()).SnapWorld();
+            hexPos = new Vector3(hexPos.x, hexPos.y, -2);
+            bluePrintHex.transform.position = hexPos;
             
-            if (Input.GetMouseButtonDown(0))
-            {
-                Hex hexPos = mousePos.ToHex();
+            leftClick.performed += PlaceSelectedHex;
+            rightClick.performed += context => BuildMode = false;
 
-                if (IsHexOccupied(hexPos) || !HasNeighborHex(hexPos)) // check hex position viability
-                {
-                    hexPlaceFailure = true;
-                    return;
-                }
+            // if (Input.GetMouseButtonDown(0))
+            // {
+            //     Hex hexPos = mousePos.ToHex();
+            //
+            //     if (IsHexOccupied(hexPos) || !HasNeighborHex(hexPos)) // check hex position viability
+            //     {
+            //         hexPlaceFailure = true;
+            //         return;
+            //     }
+            //
+            //     int pricesMet = 0;
+            //     foreach (var price in resourcePrices)
+            //     {
+            //         if (price.TryPurchaseWithResourcePrice()) pricesMet++;
+            //     }
+            //
+            //     if (pricesMet != resourcePrices.Length) // check if player can afford the resource prices
+            //     {
+            //         hexPlaceFailure = true;
+            //         return;
+            //     }
+            //     
+            //     for (int i = 0; i < pricesMet; i++) 
+            //     {
+            //         resourcePrices[i].Resource.AddAmountToResource(-resourcePrices[i].Cost);
+            //     }
+            //     
+            //     GameObject hexPlaced = Instantiate(hexPrefabSelected, hexPos.ToWorld(), Quaternion.identity);
+            //     OnHexPlaced(hexPos); 
+            // }
+            
+            // if (Input.GetMouseButtonDown(1))
+            // {
+            //     BuildMode = false;
+            // }
+        }
+
+        gateHexInputAction.performed += context => CreateBluePrintHex(GATE_HEX);
+        powerHexInputAction.performed += context => CreateBluePrintHex(POWER_HEX);
+        workshopHexInputAction.performed += context => CreateBluePrintHex(WORKSHOP_HEX);
+        goldmineHexInputAction.performed += context => CreateBluePrintHex(GOLDMINE_HEX);
+        starCollectorHexInputAction.performed += context => CreateBluePrintHex(STAR_COLLECTOR_HEX);
+
+        // if (Input.GetKeyDown(GATE_HEX.KeyCode))
+        // {
+        //     BuildMode = true;
+        //     CreateBluePrintHex(GATE_HEX);
+        // }
+        // if (Input.GetKeyDown(POWER_HEX.KeyCode))
+        // {
+        //     BuildMode = true;
+        //     CreateBluePrintHex(POWER_HEX);
+        // }
+        // if (Input.GetKeyDown(WORKSHOP_HEX.KeyCode))
+        // {
+        //     BuildMode = true;
+        //     CreateBluePrintHex(WORKSHOP_HEX);
+        // }
+        // if (Input.GetKeyDown(GOLDMINE_HEX.KeyCode))
+        // {
+        //     BuildMode = true;
+        //     CreateBluePrintHex(GOLDMINE_HEX);
+        // }
+        // if (Input.GetKeyDown(STAR_COLLECTOR_HEX.KeyCode))
+        // {
+        //     BuildMode = true;
+        //     CreateBluePrintHex(STAR_COLLECTOR_HEX);
+        // }
+    }
+    
+    private void CreateBluePrintHex(HexTileType hexType)
+    {
+        BuildMode = true;
+        
+        hexTypeSelected = hexType;
+        hexPrefabSelected = hexTileTypePrefabs[hexType.PrefabID];
+        hexColor = hexType.HexColor;
+        resourcePrices = hexType.ResourcePrices;
+        
+        StartCoroutine(BluePrintHexBlink());
+    }
+
+    private void PlaceSelectedHex(InputAction.CallbackContext context)
+    {
+        
+        Hex hexPos = this.hexPos.ToHex();
+
+        if (IsHexOccupied(hexPos) || !HasNeighborHex(hexPos)) // check hex position viability
+        {
+            hexPlaceFailure = true;
+            return;
+        }
   
-                int pricesMet = 0;
-                foreach (var price in resourcePrices)
-                {
-                    if (price.TryPurchaseWithResourcePrice()) pricesMet++;
-                }
+        int pricesMet = 0;
+        foreach (var price in resourcePrices)
+        {
+            if (price.TryPurchaseWithResourcePrice()) pricesMet++;
+        }
 
-                if (pricesMet != resourcePrices.Length) // check if player can afford the resource prices
-                {
-                    hexPlaceFailure = true;
-                    return;
-                }
+        if (pricesMet != resourcePrices.Length) // check if player can afford the resource prices
+        {
+            hexPlaceFailure = true;
+            return;
+        }
                 
-                for (int i = 0; i < pricesMet; i++) 
-                {
-                    resourcePrices[i].Resource.AddAmountToResource(-resourcePrices[i].Cost);
-                }
+        for (int i = 0; i < pricesMet; i++) 
+        {
+            resourcePrices[i].Resource.AddAmountToResource(-resourcePrices[i].Cost);
+        }
                 
-                GameObject hexPlaced = Instantiate(hexPrefabSelected, hexPos.ToWorld(), Quaternion.identity);
-                OnHexPlaced(hexPos);
-            }
-            
-            if (Input.GetMouseButtonDown(1))
-            {
-                BuildMode = false;
-            }
-        }
-
-        if (Input.GetKeyDown(GATE_HEX.KeyCode))
-        {
-            BuildMode = true;
-            CreateBluePrintHex(GATE_HEX);
-        }
-        if (Input.GetKeyDown(POWER_HEX.KeyCode))
-        {
-            BuildMode = true;
-            CreateBluePrintHex(POWER_HEX);
-        }
-        if (Input.GetKeyDown(WORKSHOP_HEX.KeyCode))
-        {
-            BuildMode = true;
-            CreateBluePrintHex(WORKSHOP_HEX);
-        }
-        if (Input.GetKeyDown(GOLDMINE_HEX.KeyCode))
-        {
-            BuildMode = true;
-            CreateBluePrintHex(GOLDMINE_HEX);
-        }
-        if (Input.GetKeyDown(STAR_COLLECTOR_HEX.KeyCode))
-        {
-            BuildMode = true;
-            CreateBluePrintHex(STAR_COLLECTOR_HEX);
-        }
-
-        void CreateBluePrintHex(HexTileType hexType)
-        {
-            hexTypeSelected = hexType;
-            hexPrefabSelected = hexTileTypePrefabs[hexType.PrefabID];
-            hexColor = hexType.HexColor;
-            resourcePrices = hexType.ResourcePrices;
-            StartCoroutine(BluePrintHexBlink());
-        }
+        GameObject hexPlaced = Instantiate(hexPrefabSelected, hexPos.ToWorld(), Quaternion.identity);
+        OnHexPlaced(hexPos);
     }
 
     private void OnBuildMode()
     {
-        Vector3 hexPos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 hexPos = mainCam.ScreenToWorldPoint(playerControls.HexBuildingActions.MousePosition.ReadValue<Vector2>());
         hexPos = new Vector3(hexPos.x, hexPos.y, 0);
+        
         bluePrintHex = Instantiate(hexExample, hexPos, Quaternion.identity);
         bluePrintHexsr = bluePrintHex.GetComponent<SpriteRenderer>();
     }
@@ -248,6 +310,24 @@ public class HexBuilder : MonoBehaviour
             resetColor = false;
             yield return null;
         }
+    }
+
+    private void OnEnable()
+    {
+        mousePosition = playerControls.HexBuildingActions.MousePosition;
+        leftClick = playerControls.HexBuildingActions.PlaceSelectedHex;
+        rightClick = playerControls.HexBuildingActions.ExitBuildMode;
+        gateHexInputAction = playerControls.HexBuildingActions.SelectGateHex;
+        powerHexInputAction = playerControls.HexBuildingActions.SelectPowerHex;
+        workshopHexInputAction = playerControls.HexBuildingActions.SelectWorkshopHex;
+        goldmineHexInputAction = playerControls.HexBuildingActions.SelectGoldmineHex;
+        starCollectorHexInputAction = playerControls.HexBuildingActions.SelectStarCollectorHex;
+        playerControls.HexBuildingActions.Enable();
+    }
+
+    private void OnDisable()
+    {
+        playerControls.HexBuildingActions.Disable();
     }
 }
 
