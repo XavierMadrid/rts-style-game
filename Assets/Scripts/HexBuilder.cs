@@ -30,19 +30,19 @@ public class HexBuilder : MonoBehaviour
     public static readonly HexTileType CENTER_HEX = new("Center Hex", CenterHexColor, 0);
     
     public static readonly HexTileType GATE_HEX = new("Connector Hex",  GateHexColor, 1, 
-        new ResourcePrice[] {new(ResourceManager.METAL, 30)}, KeyCode.Alpha1);
+        new ResourcePrice[] {new(ResourceManager.METAL, 30)});
     
     public static readonly HexTileType POWER_HEX = new("Power Hex", PowerHexColor, 2,
-        new ResourcePrice[] {new(ResourceManager.METAL, 200), new(ResourceManager.ENERGY, 120)}, KeyCode.Alpha2);
+        new ResourcePrice[] {new(ResourceManager.METAL, 200), new(ResourceManager.ENERGY, 120)});
     
     public static readonly HexTileType WORKSHOP_HEX = new("Workshop Hex", WorkshopHexColor, 3, 
-        new ResourcePrice[] {new(ResourceManager.METAL, 180), new(ResourceManager.GREENERY, 60)},KeyCode.Alpha3);
+        new ResourcePrice[] {new(ResourceManager.METAL, 180), new(ResourceManager.GREENERY, 60)});
     
     public static readonly HexTileType GOLDMINE_HEX = new("Golden Hex",  GoldmineHexColor, 4, 
-        new ResourcePrice[] {new(ResourceManager.METAL, 300)}, KeyCode.Alpha4);
+        new ResourcePrice[] {new(ResourceManager.METAL, 300)});
     
     public static readonly HexTileType STAR_COLLECTOR_HEX = new("Star Collector Hex",  StarCollectorHexColor, 5, 
-        new ResourcePrice[] {new(ResourceManager.METAL, 200)}, KeyCode.Alpha5);
+        new ResourcePrice[] {new(ResourceManager.METAL, 200)});
 
     [FormerlySerializedAs("hexPrefabs")] [FormerlySerializedAs("hexTypes")] [SerializeField] private GameObject[] hexTileTypePrefabs;
     
@@ -336,17 +336,16 @@ public class HexTileType
     public string TileName { get; private set; }
     public Color HexColor { get; private set; }
     public int PrefabID { get; private set; }
-
+    public InputAction HexInputAction { get; set; }
     public ResourcePrice[] ResourcePrices { get; private set; }
-    public KeyCode KeyCode { get; private set; }
 
     //Remember prefab must be assigned at runtime
-    public HexTileType(string hexTileName, Color hexColor, int hexPrefabID, ResourcePrice[] resourcePrices = null, KeyCode hexKeyCode = KeyCode.None)
+    public HexTileType(string hexTileName, Color hexColor, int hexPrefabID, ResourcePrice[] resourcePrices = null, InputAction hexInputAction = null)
     {
         TileName = hexTileName;
         HexColor = hexColor;
         PrefabID = Mathf.Clamp(hexPrefabID, 0, 99);
         ResourcePrices = resourcePrices;
-        KeyCode = hexKeyCode;
+        HexInputAction = hexInputAction;
     }
 }

@@ -11,6 +11,7 @@ public class ManagerReferences : MonoBehaviour
      public HexBuilder HexBuilder { get; private set; }
      public PlanetSpawner PlanetSpawner { get; private set; }
      public EnemyHandler EnemyHandler { get; private set; }
+     public UIManager UIManager { get; private set; }
 
      void Awake()
     {
@@ -27,5 +28,6 @@ public class ManagerReferences : MonoBehaviour
         HexBuilder = GetComponentInChildren<HexBuilder>();
         PlanetSpawner = GetComponentInChildren<PlanetSpawner>();
         EnemyHandler = GetComponentInChildren<EnemyHandler>();
+        UIManager = GetComponentInChildren<UIManager>();
     }
 }

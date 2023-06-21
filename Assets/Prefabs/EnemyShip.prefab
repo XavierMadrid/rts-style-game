@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5954010704403925740}
   - component: {fileID: 3417851522168726371}
   - component: {fileID: -3067109073212919977}
+  - component: {fileID: 8635959503154626225}
   - component: {fileID: 4195995180534016622}
   m_Layer: 0
   m_Name: EnemyShip
@@ -128,6 +129,21 @@ MonoBehaviour:
   DEV_trailDot: {fileID: 7086343125418366034, guid: 6799ec3adfedb45bd9f81c6557a4a454, type: 3}
   isEnemy: 1
   bulletPrefab: {fileID: 7502851799537605230, guid: d2d1cdb3edee34fecbda6310a88ccb81, type: 3}
+--- !u!114 &8635959503154626225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9033321130733412195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64aaee15491724d6fa03bdbc86f4339b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBarLeft: {fileID: 9113113458803282465, guid: 4a07826df553644398b8a0ffc7d7293e, type: 3}
+  healthBarMiddle: {fileID: 3401719495330586729, guid: 4ca768a3a540e4b029078e97eaa00649, type: 3}
+  healthBarRight: {fileID: 7644839067803512297, guid: 305619c6fb83943f8b5ab9fb248d55b3, type: 3}
 --- !u!60 &4195995180534016622
 PolygonCollider2D:
   m_ObjectHideFlags: 0

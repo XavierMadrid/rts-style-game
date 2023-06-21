@@ -101,14 +101,14 @@ public class CameraController : MonoBehaviour
     
     private void OnEnable()
     {
-        scrollValue = playerControls.UIActions.FieldOfViewZoom;
-        spaceBar = playerControls.UIActions.CenterCamera;
-        escape = playerControls.UIActions.Pause;
-        playerControls.UIActions.Enable();
+        scrollValue = playerControls.CameraControlActions.FieldOfViewZoom;
+        spaceBar = playerControls.CameraControlActions.CenterCamera;
+        escape = playerControls.CameraControlActions.Pause;
+        playerControls.CameraControlActions.Enable();
     }
 
     private void OnDisable()
     {
-        playerControls.UIActions.Disable();
+        playerControls.CameraControlActions.Disable();
     }
 }

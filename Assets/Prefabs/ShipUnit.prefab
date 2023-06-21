@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -2002969588659482053}
   - component: {fileID: 7053140116448207168}
   - component: {fileID: -3473782425227905874}
+  - component: {fileID: 9110223926814618106}
   - component: {fileID: 9076782158404091908}
   m_Layer: 6
   m_Name: ShipUnit
@@ -113,7 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1335f90c121946f4bb9806d6d489172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sr: {fileID: 6304948107054971112}
+  ShipRotationRaw: 0
   controlledColor: {r: 1, g: 0.941, b: 0.588, a: 1}
   busyColor: {r: 1, g: 0.741, b: 0, a: 1}
   idleColor: {r: 0.49, g: 0.443, b: 0.173, a: 1}
@@ -145,6 +146,21 @@ MonoBehaviour:
   DEV_trailDot: {fileID: 7086343125418366034, guid: 6799ec3adfedb45bd9f81c6557a4a454, type: 3}
   isEnemy: 0
   bulletPrefab: {fileID: 7502851799537605230, guid: d2d1cdb3edee34fecbda6310a88ccb81, type: 3}
+--- !u!114 &9110223926814618106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5668184166213969572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64aaee15491724d6fa03bdbc86f4339b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBarLeft: {fileID: 9113113458803282465, guid: 4a07826df553644398b8a0ffc7d7293e, type: 3}
+  healthBarMiddle: {fileID: 3401719495330586729, guid: 4ca768a3a540e4b029078e97eaa00649, type: 3}
+  healthBarRight: {fileID: 7644839067803512297, guid: 305619c6fb83943f8b5ab9fb248d55b3, type: 3}
 --- !u!60 &9076782158404091908
 PolygonCollider2D:
   m_ObjectHideFlags: 0

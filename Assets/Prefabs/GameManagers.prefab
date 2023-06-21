@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &335582482833493163
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8628867191515547433}
+  - component: {fileID: 8174077368992757150}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8628867191515547433
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335582482833493163}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -5.174933, y: -2.6080036, z: -25.485754}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9181413159466496898}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8174077368992757150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335582482833493163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f366a470304694b94a876dc04edbe621, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5772986400025435292
 GameObject:
   m_ObjectHideFlags: 0
@@ -79,6 +123,7 @@ Transform:
   - {fileID: 9181413160229541085}
   - {fileID: 9181413160710109597}
   - {fileID: 353122505795383635}
+  - {fileID: 8628867191515547433}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -245,8 +290,6 @@ MonoBehaviour:
   selectedCircleColor: {r: 1, g: 0.88749325, b: 0.514151, a: 0.53333336}
   selectionCircle: {fileID: 7930203606226377758, guid: 5f3b8d86e529447769825567ea9abe60, type: 3}
   shipUnit: {fileID: 5668184166213969572, guid: 7fab602eb6bcd4c0180cd86ab05d9562, type: 3}
-  mainCam: {fileID: 0}
-  hexBuildercs: {fileID: 9181413160229541084}
 --- !u!1001 &9216356427701579660
 PrefabInstance:
   m_ObjectHideFlags: 0

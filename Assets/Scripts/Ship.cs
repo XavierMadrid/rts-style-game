@@ -13,7 +13,9 @@ public class Ship : MonoBehaviour
         set => Damage = Mathf.Clamp(DamageStrength, 0, 999);
     }
     
-    protected int MaxHealth = 5;
+    protected int maxHealth = 4;
+    public int MaxHealth => maxHealth;
+
     private int health;
     public int Health
     {
@@ -31,15 +33,7 @@ public class Ship : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Health = 5;
-    }
-
-    private void Update()
-    {
-        if (ShipController.ExtendStats)
-        {
-            Debug.Log($"Health: {Health}");
-        }
+        Health = MaxHealth;
     }
 
     /// <summary>

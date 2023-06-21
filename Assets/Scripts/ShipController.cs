@@ -11,8 +11,6 @@ public class ShipController : MonoBehaviour
     private InputAction leftClick;
     private InputAction leftClickHold;
     
-    public static bool ExtendStats = false;
-
     private float clickSelectionRange = 15f;
     private bool mouseHeldDown;
     private GameObject selectionCircleClone;

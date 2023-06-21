@@ -238,18 +238,9 @@
             ]
         },
         {
-            "name": "UIActions",
+            "name": "CameraControlActions",
             "id": "d5022dcd-4e94-41f3-ab32-b5061e94d527",
             "actions": [
-                {
-                    "name": "DisplayExtraInfo",
-                    "type": "Button",
-                    "id": "e39f0a55-dd0f-49e6-9195-ffb5d26192c0",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
                 {
                     "name": "Pause",
                     "type": "Button",
@@ -281,17 +272,6 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "9d862d4e-7fe0-4d05-bdcf-e2f6e2c72773",
-                    "path": "<Keyboard>/shift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "DisplayExtraInfo",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "a547f300-485a-4c7b-b0c8-11346ae202d0",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
@@ -320,6 +300,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "CenterCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UIActions",
+            "id": "7f2a6b5f-6851-42dd-b9d3-41f6152b8d33",
+            "actions": [
+                {
+                    "name": "DisplayExtraInfo",
+                    "type": "Button",
+                    "id": "b1b4871d-5250-429c-87df-4d3d12f6db2a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "50210c21-e26b-4772-940a-1b63083daa36",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DisplayExtraInfo",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
