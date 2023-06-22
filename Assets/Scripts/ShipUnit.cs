@@ -8,9 +8,9 @@ public class ShipUnit : Ship
 
     public override void DestroyShip()
     {
-        if (WorkshopHexHome != null) WorkshopHexHome.ShipAlive = false; // default 3 ships do not have a hex home. results in error
+        if (WorkshopHexHome != null) WorkshopHexHome.ShipAlive = false;
         ManagerReferences.Instance.ShipController.ShipUnits.Remove(gameObject);
         
-        Destroy(gameObject);
+        base.DestroyShip();
     }
 }

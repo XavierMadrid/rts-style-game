@@ -47,5 +47,17 @@ public class Ship : MonoBehaviour
         return Health;
     }
 
-    public virtual void DestroyShip() => Destroy(gameObject);
+    public virtual void DestroyShip()
+    {
+        if (OnHealthChanged != null)
+        {
+            foreach (var subscriber in OnHealthChanged.GetInvocationList())
+            {
+                OnHealthChanged -= subscriber as Func<int, bool>;
+            }
+        }
+        
+        Destroy(gameObject);
+    }
+
 }

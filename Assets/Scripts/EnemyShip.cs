@@ -8,6 +8,6 @@ public class EnemyShip : Ship
     {
         ManagerReferences.Instance.EnemyHandler.EnemyShips.Remove(gameObject);
         
-        Destroy(gameObject);
+        base.DestroyShip();
     }
 }
