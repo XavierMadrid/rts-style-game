@@ -17,8 +17,8 @@ public class EnemyShipBehavior : ShipBehavior
             mousePos = new Vector3(mousePos.x, mousePos.y, -1);
             Vector3 dir = mousePos - transform.position;
             float dist = dir.magnitude;
-            ShipRotationRaw = Mathf.Atan2(dir.y, dir.x);
-            transform.rotation = Quaternion.Euler(0, 0, ShipRotationRaw * Mathf.Rad2Deg - 90);
+            float rot = Mathf.Atan2(dir.y, dir.x);
+            transform.rotation = Quaternion.Euler(0, 0, rot * Mathf.Rad2Deg - 90);
 
             if (currentlyMoving) currentlyMoving = false;
             StartCoroutine(MoveShip(mousePos, dist, speed));

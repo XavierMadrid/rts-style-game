@@ -115,6 +115,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipUnit: {fileID: 5668184166213969572, guid: 7fab602eb6bcd4c0180cd86ab05d9562, type: 3}
+  shipAliveColor: {r: 0, g: 0.8, b: 0.067, a: 1}
+  startColor: {r: 0.7294118, g: 0.8196079, b: 1, a: 0}
 --- !u!1 &6289320943085313690
 GameObject:
   m_ObjectHideFlags: 0

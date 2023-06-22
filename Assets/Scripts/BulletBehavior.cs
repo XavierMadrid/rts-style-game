@@ -8,30 +8,35 @@ public class BulletBehavior : MonoBehaviour
     [SerializeField] private GameObject DEV_trailDot = null;
 
     private int damage;
-    private bool targetReached, targetDead, valuesInitiated;
-    private float t, angle, x, y, initialDist;
-    private Vector3 initialDir, initialPos, bulletPos;
+    private float t;
+    private float initialDist;
+    private float maxTravelTime = 5f;
+    private bool targetDead;
+    private bool valuesInitiated;
+    
+    private Vector3 initialDir;
+    
+    private float straightSpeed = .1f; // speed of straight ejection from ship
+    private float curveSpeed = 10f; // speed of curving
+    private float curveStopT = 1f; // how long in seconds until the bullet curving stops
 
     private Transform targetTransform;
     
     public void InitiateBulletValues(Transform targetTransform, float shipRotation, int damage)
     {
-        t = 0;
-        angle = shipRotation;
-        x = Mathf.Cos(angle);
-        y = Mathf.Sin(angle);
+        targetTransform.GetComponent<Ship>().OnHealthChanged += IsTargetDead;
+
+        float angle = (shipRotation + 90) * Mathf.Deg2Rad;
+        float x = Mathf.Cos(angle);
+        float y = Mathf.Sin(angle);
 
         initialDir = new Vector3(x, y, 0); // direction the ship is facing
 
-        initialPos = transform.position;
-        initialDist = Vector3.Distance(targetTransform.position , initialPos); // total distance from ship to target
-
-        targetTransform.GetComponent<Ship>().OnHealthChanged += IsTargetDead;
-
+        initialDist = Vector3.Distance(targetTransform.position , transform.position); // total distance from ship to target
+        
         this.targetTransform = targetTransform;
         this.damage = damage;
         
-        targetReached = false;
         valuesInitiated = true;
     }
 
@@ -40,7 +45,7 @@ public class BulletBehavior : MonoBehaviour
     {
         if (!valuesInitiated) return;
         
-        if (targetReached || targetDead)
+        if (targetDead)
         {
             Destroy(gameObject);
             return;
@@ -48,36 +53,36 @@ public class BulletBehavior : MonoBehaviour
 
         Vector3 dist = targetTransform.position - transform.position;
 
-        float straightSpeed = .1f; // speed of straight ejection from ship
-        float curveSpeed = 10f; // speed of curving 
-        float curveStopT = 1f; // how long in seconds until the bullet curving stops
-            
-        if (Vector2.Distance(transform.position, targetTransform.position) <= .1)
+        if (Vector2.Distance(transform.position, targetTransform.position) <= .2)
         {
-            targetReached = true;
-            targetTransform.GetComponent<Ship>().OnHealthChanged -= IsTargetDead;
-
-            int remainingHealth = targetTransform.gameObject.GetComponent<Ship>().DamageShip(damage);
-
-            if (remainingHealth <= 0) targetDead = true;
-            
-            Destroy(gameObject);
+            TargetReached();
             return;
         }
             
         // cubic with linear term that falls off at curveStopT
         transform.position += new Vector3(curveSpeed * dist.x / initialDist * t * t * t + straightSpeed * initialDir.x * (curveStopT - t), 
             curveSpeed * dist.y / initialDist * t * t * t + straightSpeed * initialDir.y * (curveStopT - t), 0); 
-
-        // DEV_BulletTrail(bulletPos, t); // DEV
-
-        if (t > 5)
+        
+        if (t > maxTravelTime)
         {
             Debug.LogError("Bullet failed to reach the within 0.1f units of the target within 5 seconds.");
             Destroy(gameObject);
         }
+        
+        // DEV_BulletTrail(bulletPos, t); // DEV
 
         t += Time.deltaTime;
+    }
+
+    private void TargetReached()
+    {
+        int remainingHealth = targetTransform.GetComponent<Ship>().DamageShip(damage);
+
+        if (remainingHealth <= 0) targetDead = true;
+        
+        targetTransform.GetComponent<Ship>().OnHealthChanged -= IsTargetDead;
+
+        Destroy(gameObject);
     }
     
     private bool IsTargetDead(int health)

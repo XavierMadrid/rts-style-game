@@ -18,7 +18,6 @@ public class EnemyHandler : MonoBehaviour
             Vector3 spawnPos = ManagerReferences.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition);
             spawnPos = new Vector3(spawnPos.x, spawnPos.y, -1f);
             GameObject enemyShipClone = Instantiate(enemyShipUnitPrefab, spawnPos, Quaternion.identity);
-            enemyShipClone.GetComponent<ShipBehavior>().ShipRotationRaw = Mathf.PI / 2;
             
             EnemyShips.Add(enemyShipClone);
         }

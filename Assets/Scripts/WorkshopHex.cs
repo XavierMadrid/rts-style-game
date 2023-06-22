@@ -53,11 +53,11 @@ public class WorkshopHex : MonoBehaviour
         {
             paid = false;
             time = 30f;
-            StartCoroutine(FadeToColor(HexBuilder.WORKSHOP_HEX.HexColor));
+            StartCoroutine(FadeToColor(shipAliveColor, HexBuilder.WORKSHOP_HEX.HexColor));
         }
         else
         {
-            StartCoroutine(FadeToColor(shipAliveColor));
+            StartCoroutine(FadeToColor(HexBuilder.WORKSHOP_HEX.HexColor, shipAliveColor));
         }
         
         return value;
@@ -120,7 +120,6 @@ public class WorkshopHex : MonoBehaviour
         GameObject shipUnitClone = Instantiate(shipUnit, transform.position, Quaternion.Euler(0, 0, randRotation - 90));
         ManagerReferences.Instance.ShipController.ShipUnits.Add(shipUnitClone);
         shipUnitClone.GetComponent<ShipUnit>().WorkshopHexHome = this;
-        shipUnitClone.GetComponent<ShipBehavior>().ShipRotationRaw = randRotation * Mathf.Deg2Rad;
 
         ShipAlive = true;
 
@@ -142,18 +141,17 @@ public class WorkshopHex : MonoBehaviour
             float t = timeElapsed / lerpDuration;
             t = Mathf.Sin(.5f * t * Mathf.PI);
             
-            shipUnit.transform.position = Vector3.Lerp(startPos, targetPos, t);
+            if (shipUnit != null) shipUnit.transform.position = Vector3.Lerp(startPos, targetPos, t);
             
             timeElapsed += Time.deltaTime;
             yield return null;
         }
     }
     
-    private IEnumerator FadeToColor(Color targetColor)
+    private IEnumerator FadeToColor(Color startColor, Color targetColor)
     {
         float timeElapsed = 0;
         float lerpDuration = .75f;
-        Color startColor = sr.color;
         while (timeElapsed < lerpDuration)
         {
             sr.color = Color.Lerp(startColor, targetColor, timeElapsed / lerpDuration);

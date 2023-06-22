@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class ShipBehavior : MonoBehaviour
 {
-    [HideInInspector] public float ShipRotationRaw = 0;
+    
 }

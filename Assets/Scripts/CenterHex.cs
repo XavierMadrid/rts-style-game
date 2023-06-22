@@ -49,23 +49,21 @@ public class CenterHex : WorkshopHex
 
     private IEnumerator SpawnDelayAnimation()
     {
-        Color startColor = sr.color;
-        StartCoroutine(FadeToColor(Color.white));
+        StartCoroutine(FadeToColor(HexBuilder.CENTER_HEX.HexColor, Color.white));
         
         yield return oneSecDelay;
         yield return oneSecDelay;
         yield return oneSecDelay;
         
-        StartCoroutine(FadeToColor(startColor));
+        StartCoroutine(FadeToColor(Color.white, HexBuilder.CENTER_HEX.HexColor));
         
         SpawnShipUnit(Random.Range(0f, 360f));
     }
     
-    private IEnumerator FadeToColor(Color targetColor)
+    private IEnumerator FadeToColor(Color startColor, Color targetColor)
     {
         float timeElapsed = 0;
         float lerpDuration = .75f;
-        Color startColor = sr.color;
         while (timeElapsed < lerpDuration)
         {
             sr.color = Color.Lerp(startColor, targetColor, timeElapsed / lerpDuration);

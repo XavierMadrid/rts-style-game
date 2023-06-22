@@ -69,9 +69,9 @@ public class ShipUnitBehavior : ShipBehavior
         mousePos = new Vector3(mousePos.x, mousePos.y, -1f);
 
         Vector3 dir = (mousePos - transform.position).normalized;
-        ShipRotationRaw = Mathf.Atan2(dir.y, dir.x);
+        float rot = Mathf.Atan2(dir.y, dir.x);
 
-        transform.rotation = Quaternion.Euler(0, 0, ShipRotationRaw * Mathf.Rad2Deg - 90);
+        transform.rotation = Quaternion.Euler(0, 0, rot * Mathf.Rad2Deg - 90);
         
         if (Input.GetMouseButtonDown(1))
         {
