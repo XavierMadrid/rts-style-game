@@ -1,17 +1,13 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class ShootBehavior : MonoBehaviour
 {
     [SerializeField] private bool isEnemy = false;
 
-    private bool targetDead = false;
-    private int damage = 1; // is set in Start()
-    private float time = 0;
+    private bool targetDead;
+    private float time;
     private bool shotReady;
     private float rotSpeed = 200f;
     private float range = 30f;
@@ -24,11 +20,9 @@ public class ShootBehavior : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab = null;
     
     private WaitForSeconds searchDelayInterval = new(.05f);
-    private WaitForSeconds shootDelay = new(4f);
     
     private void Start()
     {
-        damage = GetComponent<Ship>().DamageStrength;
         StartCoroutine(SearchForTargets());
     }
 
@@ -52,7 +46,7 @@ public class ShootBehavior : MonoBehaviour
         
         ObservableCollection<GameObject> ships;
 
-        while (true)
+        while (gameObject != null) // perhaps have a bool that is true when the correct ship list is nonempty.
         {
             yield return searchDelayInterval;
             
@@ -61,41 +55,52 @@ public class ShootBehavior : MonoBehaviour
             ships = isEnemy
                 ? ManagerReferences.Instance.ShipController.ShipUnits
                 : ManagerReferences.Instance.EnemyHandler.EnemyShips;
-            
+
+            float shortestSqrDist = sqrRange + 50;
+            GameObject closestShip = null;
+
             foreach (var ship in ships)
             {
-                if (Vector3.SqrMagnitude(ship.transform.position - currentPos) < sqrRange)
+                float sqrDist = Vector3.SqrMagnitude(ship.transform.position - currentPos);
+
+                if (!(sqrDist < sqrRange)) continue;
+                
+                if (sqrDist < shortestSqrDist)
                 {
-                    targetDead = false;
-
-                    ship.GetComponent<Ship>().OnHealthChanged += IsTargetDead;
-
-                    time += .5f;
-                    
-                    while (!shotReady && !targetDead)
-                    {
-                        RotateShipTowardsTarget(ship.transform);
-
-                        yield return null;
-                    }
-
-                    while (!targetDead)
-                    {
-                        Shoot(ship.transform);
-                        time = 2f;
-                        
-                        while (!shotReady && !targetDead)
-                        {
-                            RotateShipTowardsTarget(ship.transform);
-                            
-                            yield return null;
-                        }
-
-                        yield return null;
-                    }
-
-                    break;
+                    shortestSqrDist = sqrDist;
+                    closestShip = ship;
                 }
+            }
+
+            if (closestShip == null) continue;
+            
+            targetDead = false;
+
+            closestShip.GetComponent<Ship>().OnHealthChanged += IsTargetDead;
+
+            time += .5f;
+                    
+            while (!shotReady && !targetDead)
+            {
+                RotateShipTowardsTarget(closestShip.transform);
+
+                yield return null;
+            }
+
+            while (!targetDead)
+            {
+                Shoot(closestShip.transform);
+                time = 2f;
+                shotReady = false;
+                
+                while (!shotReady && !targetDead)
+                {
+                    RotateShipTowardsTarget(closestShip.transform);
+                            
+                    yield return null;
+                }
+
+                yield return null;
             }
         }
     }
