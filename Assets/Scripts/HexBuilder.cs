@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -22,18 +23,18 @@ public class HexBuilder : MonoBehaviour
 
     private static readonly Color CenterHexColor = new(.729f, .820f, 1, 1);
     private static readonly Color GateHexColor = new(.3208f, .3208f, .3208f, .6471f);
-    private static readonly Color PowerHexColor = new(0, 0.5764f, 1, 1);
+    private static readonly Color PowerHexColor = new(0, 0.3589f, 0.6226f, 1f);
     private static readonly Color WorkshopHexColor = new(.0218f, 0.3019f, 0, 1);
     private static readonly Color GoldmineHexColor = new(1, .733f, 0, 1);
     private static readonly Color StarCollectorHexColor = new(.71f, .286f, 0, 1);
     
-    public static readonly HexTileType CENTER_HEX = new("Center Hex", CenterHexColor, 0);
+    public static readonly HexTileType CENTER_HEX = new("Center Hex", CenterHexColor, 0, null, true);
     
     public static readonly HexTileType GATE_HEX = new("Connector Hex",  GateHexColor, 1, 
         new ResourcePrice[] {new(ResourceManager.METAL, 30)});
     
     public static readonly HexTileType POWER_HEX = new("Power Hex", PowerHexColor, 2,
-        new ResourcePrice[] {new(ResourceManager.METAL, 200), new(ResourceManager.ENERGY, 120)});
+        new ResourcePrice[] {new(ResourceManager.METAL, 200), new(ResourceManager.ENERGY, 120)}, true);
     
     public static readonly HexTileType WORKSHOP_HEX = new("Workshop Hex", WorkshopHexColor, 3, 
         new ResourcePrice[] {new(ResourceManager.METAL, 180), new(ResourceManager.GREENERY, 60)});
@@ -42,16 +43,20 @@ public class HexBuilder : MonoBehaviour
         new ResourcePrice[] {new(ResourceManager.METAL, 300)});
     
     public static readonly HexTileType STAR_COLLECTOR_HEX = new("Star Collector Hex",  StarCollectorHexColor, 5, 
-        new ResourcePrice[] {new(ResourceManager.METAL, 200)});
+        new ResourcePrice[] {new(ResourceManager.METAL, 200)}, true);
 
     [FormerlySerializedAs("hexPrefabs")] [FormerlySerializedAs("hexTypes")] [SerializeField] private GameObject[] hexTileTypePrefabs;
+
+    // an energy hex refers to any hex that either generates, transfers, or uses energy (aka any hex related to energy)
+    public event Action<GameObject, Hex> OnEnergyHexPlaced;
     
     private Color failedHexPlaceColor = new(1, 0, 0, .5f);
-    
-    private List<Hex> occupiedHexes = new();
-    private GameObject centerHex;
+
+    public Dictionary<Hex, GameObject> HexPosDict = new ();
+    public Dictionary<Hex, GameObject> EnergyHexPosDict = new ();
+    [HideInInspector] public GameObject CenterHex;
     private GameObject hexPrefabSelected;
-    private HexTileType hexTypeSelected;
+    private bool isEnergyHex;
     private Color hexColor;
     private ResourcePrice[] resourcePrices;
     private GameObject bluePrintHex;
@@ -92,8 +97,9 @@ public class HexBuilder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        centerHex = Instantiate(hexTileTypePrefabs[CENTER_HEX.PrefabID], Vector3.zero, Quaternion.identity);
-        occupiedHexes.Add(centerHex.transform.position.ToHex());
+        CenterHex = Instantiate(hexTileTypePrefabs[CENTER_HEX.PrefabID], Vector3.zero, Quaternion.identity);
+        HexPosDict.Add(CenterHex.transform.position.ToHex(), CenterHex);
+        EnergyHexPosDict.Add(CenterHex.transform.position.ToHex(), CenterHex);
     }
 
     // Update is called once per frame
@@ -182,10 +188,10 @@ public class HexBuilder : MonoBehaviour
     {
         BuildMode = true;
         
-        hexTypeSelected = hexType;
         hexPrefabSelected = hexTileTypePrefabs[hexType.PrefabID];
         hexColor = hexType.HexColor;
         resourcePrices = hexType.ResourcePrices;
+        isEnergyHex = hexType.IsEnergyHex;
         
         StartCoroutine(BluePrintHexBlink());
     }
@@ -219,7 +225,8 @@ public class HexBuilder : MonoBehaviour
         }
                 
         GameObject hexPlaced = Instantiate(hexPrefabSelected, hexPos.ToWorld(), Quaternion.identity);
-        OnHexPlaced(hexPos);
+
+        OnHexPlaced(hexPos, hexPlaced);
     }
 
     private void OnBuildMode()
@@ -236,32 +243,33 @@ public class HexBuilder : MonoBehaviour
         Destroy(bluePrintHex);
     }
 
-    private void OnHexPlaced(Hex hexPos)
+    private void OnHexPlaced(Hex hexPos, GameObject hexObject)
     {
-        occupiedHexes.Add(hexPos);
+        HexPosDict.Add(hexPos, hexObject);
+        
+        if (isEnergyHex)
+        {
+            EnergyHexPosDict.Add(hexPos, hexObject);
+            OnEnergyHexPlaced?.Invoke(hexObject, hexPos);
+        }
     }
 
     private bool IsHexOccupied(Hex hexPos)
     {
-        foreach (Hex hex in occupiedHexes)
-        {
-            if (hexPos.Equals(hex))
-            {
-                return true;
-            }
-        }
-        
-        return false;
+        return HexPosDict.Keys.Contains(hexPos);
     }
 
     private bool HasNeighborHex(Hex hexPos)
     {
         IEnumerable<Hex> neighbours = hexPos.Neighbours();
-        foreach (Hex hex in occupiedHexes)
+        foreach (Hex hex in HexPosDict.Keys)
         {
-            foreach (Hex neighbour in neighbours)
+            foreach (var neighbor in neighbours)
             {
-                if (hex.Equals(neighbour)) return true;
+                if (neighbor.Equals(hex))
+                {
+                    return true;
+                }
             }
         }
         
@@ -278,17 +286,10 @@ public class HexBuilder : MonoBehaviour
             float time = 0;
             float whiteTintMax = .7f;
 
-            // float rDifference = 1 - hexColor.r;
-            // float gDifference = 1 - hexColor.g;
-            // float bDifference = 1 - hexColor.b;
-    
             while (!resetColor && bluePrintHexsr != null) // add clamp
             {
                 float rgbWhiteTint = .5f * constant * Mathf.Cos(speed * time) + whiteTintMax * -constant;
 
-                //bluePrintHexsr.color = new Color(hexColor.r + rDifference * (1 - rgbWhiteTint), hexColor.g + gDifference * (1 - rgbWhiteTint), 
-                //    hexColor.b + bDifference * (1 - rgbWhiteTint));
-                
                 bluePrintHexsr.color = new Color(hexColor.r + rgbWhiteTint, hexColor.g + rgbWhiteTint, 
                     hexColor.b + rgbWhiteTint);
 
@@ -336,16 +337,18 @@ public class HexTileType
     public string TileName { get; private set; }
     public Color HexColor { get; private set; }
     public int PrefabID { get; private set; }
-    public InputAction HexInputAction { get; set; }
     public ResourcePrice[] ResourcePrices { get; private set; }
+    public bool IsEnergyHex { get; private set; }
+    public InputAction HexInputAction { get; set; }
 
     //Remember prefab must be assigned at runtime
-    public HexTileType(string hexTileName, Color hexColor, int hexPrefabID, ResourcePrice[] resourcePrices = null, InputAction hexInputAction = null)
+    public HexTileType(string hexTileName, Color hexColor, int hexPrefabID, ResourcePrice[] resourcePrices = null, bool isEnergyHex = false, InputAction hexInputAction = null)
     {
         TileName = hexTileName;
         HexColor = hexColor;
         PrefabID = Mathf.Clamp(hexPrefabID, 0, 99);
         ResourcePrices = resourcePrices;
+        IsEnergyHex = isEnergyHex;
         HexInputAction = hexInputAction;
     }
 }
