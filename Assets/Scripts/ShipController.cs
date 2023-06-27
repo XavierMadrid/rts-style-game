@@ -9,10 +9,10 @@ public class ShipController : MonoBehaviour
     private PlayerControls playerControls;
     private InputAction mousePosition;
     private InputAction leftClick;
-    private InputAction leftClickHold;
     
-    private float clickSelectionRange = 15f;
+    private readonly float clickSelectionRange = 15f;
     private bool mouseHeldDown;
+    private bool unsubscribed;
     private GameObject selectionCircleClone;
     private Camera mainCam;
     
@@ -50,11 +50,21 @@ public class ShipController : MonoBehaviour
             Vector3 pos = mainCam.ScreenToWorldPoint(Input.mousePosition);
             pos = new Vector3(pos.x, pos.y, -1);
             GameObject shipUnitClone = Instantiate(shipUnit, pos, Quaternion.identity);
-            
             ShipUnits.Add(shipUnitClone);
         }
 
-        if (ManagerReferences.Instance.HexBuilder.BuildMode) return; // change to event to prevent this check every frame
+        // change to event to prevent this check every frame
+        if (ManagerReferences.Instance.HexBuilder.BuildMode)
+        {
+            if (!unsubscribed)
+            {
+                leftClick.performed -= BeginShipSelecting;
+                leftClick.canceled -= ChooseShipSelectionProcess;
+                unsubscribed = true;
+            }
+
+            return;
+        }
 
         if (mouseHeldDown)
         {
@@ -67,6 +77,7 @@ public class ShipController : MonoBehaviour
 
         leftClick.performed += BeginShipSelecting;
         leftClick.canceled += ChooseShipSelectionProcess;
+        unsubscribed = false;
     }
 
     private void BeginShipSelecting(InputAction.CallbackContext context)
@@ -162,7 +173,6 @@ public class ShipController : MonoBehaviour
     {
         mousePosition = playerControls.ShipControlActions.MousePosition;
         leftClick = playerControls.ShipControlActions.SelectShip;
-        leftClickHold = playerControls.ShipControlActions.DragSelectShips;
         playerControls.ShipControlActions.Enable();
     }
 

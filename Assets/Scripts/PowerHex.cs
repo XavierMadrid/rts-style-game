@@ -22,9 +22,22 @@ public class PowerHex : EnergyHex
             ? FadeToColor(HexBuilder.POWER_HEX.HexColor, poweredColor)
             : FadeToColor(poweredColor, HexBuilder.POWER_HEX.HexColor));
 
-        base.HexActivation(value);
+        if (value)
+        {
+            foreach (var hexObject in linkedHexes)
+            {
+                if (hexObject.TryGetComponent<EnergyHex>(out var energyHex))
+                {
+                    energyHex.HexActivated = true;
+                }
+                else
+                {
+                    // Debug.LogError($"Failed to get the EnergyHex script from a linked object {hexObject}");
+                }
+            }
+        }
     }
-    
+
     private IEnumerator FadeToColor(Color startColor, Color targetColor)
     {
         float timeElapsed = 0;

@@ -51,6 +51,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "SelectTurretHex",
+                    "type": "Button",
+                    "id": "e21db602-e66b-4df6-a915-6aae6d5e92aa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "ExitBuildMode",
                     "type": "Button",
                     "id": "042e5a42-743a-4f0d-b710-5c207fea225e",
@@ -166,6 +175,17 @@
                     "action": "MousePosition",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "22170eb0-73e9-4e18-b1ee-0056ac9701f1",
+                    "path": "<Keyboard>/6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectTurretHex",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -177,15 +197,6 @@
                     "name": "SelectShip",
                     "type": "Button",
                     "id": "559dcd53-c0f9-4460-ad4c-0c95a837dd64",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "DragSelectShips",
-                    "type": "Button",
-                    "id": "1570c5e9-c84d-425a-8e7e-3f677ea75d9c",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -210,17 +221,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "SelectShip",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2ba8a93f-a071-49b2-a63f-355711f56ac0",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "Hold",
-                    "processors": "",
-                    "groups": "",
-                    "action": "DragSelectShips",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

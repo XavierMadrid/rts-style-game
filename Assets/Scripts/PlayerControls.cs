@@ -73,6 +73,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""SelectTurretHex"",
+                    ""type"": ""Button"",
+                    ""id"": ""e21db602-e66b-4df6-a915-6aae6d5e92aa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""ExitBuildMode"",
                     ""type"": ""Button"",
                     ""id"": ""042e5a42-743a-4f0d-b710-5c207fea225e"",
@@ -188,6 +197,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""22170eb0-73e9-4e18-b1ee-0056ac9701f1"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectTurretHex"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -199,15 +219,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""name"": ""SelectShip"",
                     ""type"": ""Button"",
                     ""id"": ""559dcd53-c0f9-4460-ad4c-0c95a837dd64"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""DragSelectShips"",
-                    ""type"": ""Button"",
-                    ""id"": ""1570c5e9-c84d-425a-8e7e-3f677ea75d9c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -232,17 +243,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""SelectShip"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2ba8a93f-a071-49b2-a63f-355711f56ac0"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": ""Hold"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""DragSelectShips"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -365,13 +365,13 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_HexBuildingActions_SelectWorkshopHex = m_HexBuildingActions.FindAction("SelectWorkshopHex", throwIfNotFound: true);
         m_HexBuildingActions_SelectGoldmineHex = m_HexBuildingActions.FindAction("SelectGoldmineHex", throwIfNotFound: true);
         m_HexBuildingActions_SelectStarCollectorHex = m_HexBuildingActions.FindAction("SelectStarCollectorHex", throwIfNotFound: true);
+        m_HexBuildingActions_SelectTurretHex = m_HexBuildingActions.FindAction("SelectTurretHex", throwIfNotFound: true);
         m_HexBuildingActions_ExitBuildMode = m_HexBuildingActions.FindAction("ExitBuildMode", throwIfNotFound: true);
         m_HexBuildingActions_PlaceSelectedHex = m_HexBuildingActions.FindAction("PlaceSelectedHex", throwIfNotFound: true);
         m_HexBuildingActions_MousePosition = m_HexBuildingActions.FindAction("MousePosition", throwIfNotFound: true);
         // ShipControlActions
         m_ShipControlActions = asset.FindActionMap("ShipControlActions", throwIfNotFound: true);
         m_ShipControlActions_SelectShip = m_ShipControlActions.FindAction("SelectShip", throwIfNotFound: true);
-        m_ShipControlActions_DragSelectShips = m_ShipControlActions.FindAction("DragSelectShips", throwIfNotFound: true);
         m_ShipControlActions_MousePosition = m_ShipControlActions.FindAction("MousePosition", throwIfNotFound: true);
         // CameraControlActions
         m_CameraControlActions = asset.FindActionMap("CameraControlActions", throwIfNotFound: true);
@@ -447,6 +447,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_HexBuildingActions_SelectWorkshopHex;
     private readonly InputAction m_HexBuildingActions_SelectGoldmineHex;
     private readonly InputAction m_HexBuildingActions_SelectStarCollectorHex;
+    private readonly InputAction m_HexBuildingActions_SelectTurretHex;
     private readonly InputAction m_HexBuildingActions_ExitBuildMode;
     private readonly InputAction m_HexBuildingActions_PlaceSelectedHex;
     private readonly InputAction m_HexBuildingActions_MousePosition;
@@ -459,6 +460,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @SelectWorkshopHex => m_Wrapper.m_HexBuildingActions_SelectWorkshopHex;
         public InputAction @SelectGoldmineHex => m_Wrapper.m_HexBuildingActions_SelectGoldmineHex;
         public InputAction @SelectStarCollectorHex => m_Wrapper.m_HexBuildingActions_SelectStarCollectorHex;
+        public InputAction @SelectTurretHex => m_Wrapper.m_HexBuildingActions_SelectTurretHex;
         public InputAction @ExitBuildMode => m_Wrapper.m_HexBuildingActions_ExitBuildMode;
         public InputAction @PlaceSelectedHex => m_Wrapper.m_HexBuildingActions_PlaceSelectedHex;
         public InputAction @MousePosition => m_Wrapper.m_HexBuildingActions_MousePosition;
@@ -486,6 +488,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SelectStarCollectorHex.started += instance.OnSelectStarCollectorHex;
             @SelectStarCollectorHex.performed += instance.OnSelectStarCollectorHex;
             @SelectStarCollectorHex.canceled += instance.OnSelectStarCollectorHex;
+            @SelectTurretHex.started += instance.OnSelectTurretHex;
+            @SelectTurretHex.performed += instance.OnSelectTurretHex;
+            @SelectTurretHex.canceled += instance.OnSelectTurretHex;
             @ExitBuildMode.started += instance.OnExitBuildMode;
             @ExitBuildMode.performed += instance.OnExitBuildMode;
             @ExitBuildMode.canceled += instance.OnExitBuildMode;
@@ -514,6 +519,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SelectStarCollectorHex.started -= instance.OnSelectStarCollectorHex;
             @SelectStarCollectorHex.performed -= instance.OnSelectStarCollectorHex;
             @SelectStarCollectorHex.canceled -= instance.OnSelectStarCollectorHex;
+            @SelectTurretHex.started -= instance.OnSelectTurretHex;
+            @SelectTurretHex.performed -= instance.OnSelectTurretHex;
+            @SelectTurretHex.canceled -= instance.OnSelectTurretHex;
             @ExitBuildMode.started -= instance.OnExitBuildMode;
             @ExitBuildMode.performed -= instance.OnExitBuildMode;
             @ExitBuildMode.canceled -= instance.OnExitBuildMode;
@@ -545,14 +553,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_ShipControlActions;
     private List<IShipControlActionsActions> m_ShipControlActionsActionsCallbackInterfaces = new List<IShipControlActionsActions>();
     private readonly InputAction m_ShipControlActions_SelectShip;
-    private readonly InputAction m_ShipControlActions_DragSelectShips;
     private readonly InputAction m_ShipControlActions_MousePosition;
     public struct ShipControlActionsActions
     {
         private @PlayerControls m_Wrapper;
         public ShipControlActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @SelectShip => m_Wrapper.m_ShipControlActions_SelectShip;
-        public InputAction @DragSelectShips => m_Wrapper.m_ShipControlActions_DragSelectShips;
         public InputAction @MousePosition => m_Wrapper.m_ShipControlActions_MousePosition;
         public InputActionMap Get() { return m_Wrapper.m_ShipControlActions; }
         public void Enable() { Get().Enable(); }
@@ -566,9 +572,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SelectShip.started += instance.OnSelectShip;
             @SelectShip.performed += instance.OnSelectShip;
             @SelectShip.canceled += instance.OnSelectShip;
-            @DragSelectShips.started += instance.OnDragSelectShips;
-            @DragSelectShips.performed += instance.OnDragSelectShips;
-            @DragSelectShips.canceled += instance.OnDragSelectShips;
             @MousePosition.started += instance.OnMousePosition;
             @MousePosition.performed += instance.OnMousePosition;
             @MousePosition.canceled += instance.OnMousePosition;
@@ -579,9 +582,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SelectShip.started -= instance.OnSelectShip;
             @SelectShip.performed -= instance.OnSelectShip;
             @SelectShip.canceled -= instance.OnSelectShip;
-            @DragSelectShips.started -= instance.OnDragSelectShips;
-            @DragSelectShips.performed -= instance.OnDragSelectShips;
-            @DragSelectShips.canceled -= instance.OnDragSelectShips;
             @MousePosition.started -= instance.OnMousePosition;
             @MousePosition.performed -= instance.OnMousePosition;
             @MousePosition.canceled -= instance.OnMousePosition;
@@ -717,6 +717,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnSelectWorkshopHex(InputAction.CallbackContext context);
         void OnSelectGoldmineHex(InputAction.CallbackContext context);
         void OnSelectStarCollectorHex(InputAction.CallbackContext context);
+        void OnSelectTurretHex(InputAction.CallbackContext context);
         void OnExitBuildMode(InputAction.CallbackContext context);
         void OnPlaceSelectedHex(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
@@ -724,7 +725,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     public interface IShipControlActionsActions
     {
         void OnSelectShip(InputAction.CallbackContext context);
-        void OnDragSelectShips(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
     }
     public interface ICameraControlActionsActions

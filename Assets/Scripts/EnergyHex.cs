@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class EnergyHex : MonoBehaviour
 {
-    private List<GameObject> linkedHexes = new ();
+    protected List<GameObject> linkedHexes = new ();
     
     private const int linkRange = 3; // is multiplied by 6 to account for hex position intervals of 6
     private int activatedHexesCount;
     private bool hexActivated;
 
-    protected virtual bool HexActivated
+    public virtual bool HexActivated
     {
         get => hexActivated;
         set
@@ -80,13 +80,7 @@ public class EnergyHex : MonoBehaviour
 
     protected virtual void HexActivation(bool value)
     {
-        foreach (var hexObject in linkedHexes)
-        {
-            if (hexObject.TryGetComponent<EnergyHex>(out var energyHex))
-            {
-                energyHex.HexActivated = true;
-            }
-        }
+        
     }
 
     private void OnDisable()

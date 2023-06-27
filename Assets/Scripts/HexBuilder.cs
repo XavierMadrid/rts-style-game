@@ -20,6 +20,7 @@ public class HexBuilder : MonoBehaviour
     private InputAction workshopHexInputAction;
     private InputAction goldmineHexInputAction;
     private InputAction starCollectorHexInputAction;
+    private InputAction turretHexInputAction;
 
     private static readonly Color CenterHexColor = new(.729f, .820f, 1, 1);
     private static readonly Color GateHexColor = new(.3208f, .3208f, .3208f, .6471f);
@@ -27,7 +28,8 @@ public class HexBuilder : MonoBehaviour
     private static readonly Color WorkshopHexColor = new(.0218f, 0.3019f, 0, 1);
     private static readonly Color GoldmineHexColor = new(1, .733f, 0, 1);
     private static readonly Color StarCollectorHexColor = new(.71f, .286f, 0, 1);
-    
+    private static readonly Color TurretHexColor = new(.6f, .5f, 0, 1);
+
     public static readonly HexTileType CENTER_HEX = new("Center Hex", CenterHexColor, 0, null, true);
     
     public static readonly HexTileType GATE_HEX = new("Connector Hex",  GateHexColor, 1, 
@@ -44,6 +46,9 @@ public class HexBuilder : MonoBehaviour
     
     public static readonly HexTileType STAR_COLLECTOR_HEX = new("Star Collector Hex",  StarCollectorHexColor, 5, 
         new ResourcePrice[] {new(ResourceManager.METAL, 200)}, true);
+    
+    public static readonly HexTileType TURRET_HEX = new("Turret Hex",  TurretHexColor, 6, 
+        new ResourcePrice[] {new(ResourceManager.METAL, 200), new(ResourceManager.GOLD, 60)}, true);
 
     [FormerlySerializedAs("hexPrefabs")] [FormerlySerializedAs("hexTypes")] [SerializeField] private GameObject[] hexTileTypePrefabs;
 
@@ -107,6 +112,7 @@ public class HexBuilder : MonoBehaviour
     {
         if (BuildMode)
         {
+            Debug.Log(BuildMode);
             hexPos = mainCam.ScreenToWorldPoint(mousePosition.ReadValue<Vector2>()).SnapWorld();
             hexPos = new Vector3(hexPos.x, hexPos.y, -2);
             bluePrintHex.transform.position = hexPos;
@@ -156,6 +162,7 @@ public class HexBuilder : MonoBehaviour
         workshopHexInputAction.performed += context => CreateBluePrintHex(WORKSHOP_HEX);
         goldmineHexInputAction.performed += context => CreateBluePrintHex(GOLDMINE_HEX);
         starCollectorHexInputAction.performed += context => CreateBluePrintHex(STAR_COLLECTOR_HEX);
+        turretHexInputAction.performed += context => CreateBluePrintHex(TURRET_HEX);
 
         // if (Input.GetKeyDown(GATE_HEX.KeyCode))
         // {
@@ -240,6 +247,7 @@ public class HexBuilder : MonoBehaviour
 
     private void OnBuildModeOff()
     {
+        leftClick.performed -= PlaceSelectedHex;
         Destroy(bluePrintHex);
     }
 
@@ -323,6 +331,7 @@ public class HexBuilder : MonoBehaviour
         workshopHexInputAction = playerControls.HexBuildingActions.SelectWorkshopHex;
         goldmineHexInputAction = playerControls.HexBuildingActions.SelectGoldmineHex;
         starCollectorHexInputAction = playerControls.HexBuildingActions.SelectStarCollectorHex;
+        turretHexInputAction = playerControls.HexBuildingActions.SelectTurretHex;
         playerControls.HexBuildingActions.Enable();
     }
 
