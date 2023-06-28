@@ -6,13 +6,14 @@ using UnityEngine;
 public class TurretHex : EnergyHex
 {
     [SerializeField] private GameObject bulletPrefab = null;
-    private Color poweredColor = new(1, 0.8366f, 0, 1f);
+    private readonly Color poweredColor = new(1, 0.8366f, 0, 1f);
     private SpriteRenderer sr;
 
     private bool shootingOn;
     private bool targetDead;
     private bool shotReady;
     private int damage = 1;
+    private int energyDrain = -1;
     private float shootDelay = 1f;
     private float changedTargetShootDelay = .5f;
     private float time;
@@ -53,7 +54,6 @@ public class TurretHex : EnergyHex
 
     private IEnumerator SearchForTargets()
     {
-        Debug.Log($"{HexActivated}, base: {base.HexActivated}");
         while (shootingOn && gameObject != null) // perhaps have a bool that is true when the correct ship list is nonempty.
         {
             yield return searchDelayInterval;
@@ -96,6 +96,8 @@ public class TurretHex : EnergyHex
             while (!targetDead)
             {
                 Shoot(closestShip.transform);
+                ResourceManager.ENERGY.AddAmountToResource(energyDrain);
+                
                 time = shootDelay;
                 shotReady = false;
                 

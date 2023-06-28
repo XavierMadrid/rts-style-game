@@ -2726,6 +2726,14 @@ PrefabInstance:
       value: Hex Building Controls
       objectReference: {fileID: 0}
     - target: {fileID: 9181413160229541084, guid: 1535c447cab914508b495dd741be54ec, type: 3}
+      propertyPath: hexTileTypePrefabs.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 9181413160229541084, guid: 1535c447cab914508b495dd741be54ec, type: 3}
+      propertyPath: hexTileTypePrefabs.Array.data[6]
+      value: 
+      objectReference: {fileID: 3245068968175741333, guid: 8ca03ccf7eb9c408f97db3e71569ed0d, type: 3}
+    - target: {fileID: 9181413160229541084, guid: 1535c447cab914508b495dd741be54ec, type: 3}
       propertyPath: hexBuildingControls.m_Actions.Array.size
       value: 1
       objectReference: {fileID: 0}

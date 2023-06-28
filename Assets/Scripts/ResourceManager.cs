@@ -70,6 +70,11 @@ public class GameResource
         CurrentAmount = Mathf.Clamp(initialAmount, 0, 10000);
     }
 
+    /// <summary>
+    /// Add or subtract from a chosen resource bank.
+    /// </summary>
+    /// <param name="amountToAdd">Amount to be either added (positive) or subtracted (negative) to the chosen resource.</param>
+    /// <exception cref="NoNullAllowedException"></exception>
     public void AddAmountToResource(int amountToAdd)
     {
         if (Name == "Null")
@@ -81,6 +86,12 @@ public class GameResource
         if (CurrentAmount < 0) CurrentAmount = 0;
     }
     
+    /// <summary>
+    /// Test if a purchase is possible with the given player's resource amounts. Typically, AddAmountToResource() is used in
+    /// conjunction with this since this does NOT do any changing of the player's resources, only returns if they can afford it.
+    /// </summary>
+    /// <param name="cost">Amount of chosen resource to require.</param>
+    /// <returns>Returns true if the player has sufficient resources of the necessary types; returns false if otherwise.</returns>
     public bool AttemptPurchase(int cost)
     {
         if (CurrentAmount >= cost)
