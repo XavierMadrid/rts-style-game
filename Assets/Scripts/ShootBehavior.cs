@@ -1,21 +1,24 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class ShootBehavior : MonoBehaviour
+public abstract class ShootBehavior : MonoBehaviour
 {
-    [SerializeField] private bool isEnemy = false;
-
+    [SerializeField] protected GameObject bulletPrefab = null;
+    private GameObject closestShip;
+    
     private bool targetDead;
     private bool shotReady;
     private float shootDelay = 2f;
     private float changedTargetShootDelay = .5f;
-    private float time;
+    private float shootCdTime;
     private readonly float rotSpeed = 200f;
-    private float range = 30f;
-    public float Range
+    protected float Range = 30f;
+    public float CurrentRange
     {
-        get => range;
+        get => Range;
         set
         {
             if (value <= 0)
@@ -24,83 +27,100 @@ public class ShootBehavior : MonoBehaviour
             }
             else
             {
-                range = value;
+                Range = value;
             }
         }
     }
     
-    [SerializeField] private GameObject bulletPrefab = null;
-    
     private WaitForSeconds searchDelayInterval = new(.05f);
-    
-    private void Start()
+
+    public event Action<GameObject, float> OnShipTargetFound;
+    public event EventHandler<EventArgs> OnShipTargetLost;
+
+    private void OnEnable()
     {
-        StartCoroutine(SearchForTargets());
+        StartCoroutine(SearchForShipTargets());
     }
 
     private void Update()
     {
-        time -= Time.deltaTime;
+        shootCdTime -= Time.deltaTime;
 
-        shotReady = time <= 0;
+        shotReady = shootCdTime <= 0;
     }
 
-    private IEnumerator SearchForTargets()
-    {
-        float sqrRange = Range * Range;
-        
-        ObservableCollection<GameObject> ships;
+    protected abstract ObservableCollection<GameObject> GetTargetableObjects();
 
-        while (gameObject != null) // perhaps have a bool that is true when the correct ship list is nonempty.
+    protected virtual bool DoSearch()
+    {
+        if (gameObject != null) return true;
+        return false;
+    }
+    
+    private IEnumerator SearchForShipTargets()
+    {
+        while (DoSearch()) // perhaps have a bool that is true when the correct ship list is nonempty.
         {
+            float sqrRange = Range * Range;
+
             yield return searchDelayInterval;
             
             Vector3 currentPos = transform.position;
 
-            ships = isEnemy
-                ? ManagerReferences.Instance.ShipController.ShipUnits
-                : ManagerReferences.Instance.EnemyHandler.EnemyShips;
+            var objects = GetTargetableObjects();
+            
+            // objects = isEnemy
+            //     ? ManagerReferences.Instance.ShipController.ShipUnits
+            //     : ManagerReferences.Instance.EnemyHandler.EnemyShips;
 
             float shortestSqrDist = sqrRange + 50;
             GameObject closestShip = null;
 
-            foreach (var ship in ships)
+            foreach (var obj in objects)
             {
-                float sqrDist = Vector3.SqrMagnitude(ship.transform.position - currentPos);
+                float sqrDist = Vector3.SqrMagnitude(obj.transform.position - currentPos);
 
                 if (!(sqrDist < sqrRange)) continue;
                 
                 if (sqrDist < shortestSqrDist)
                 {
                     shortestSqrDist = sqrDist;
-                    closestShip = ship;
+                    closestShip = obj;
                 }
             }
 
-            if (closestShip == null) continue;
-            
+            if (closestShip == null)
+            {
+                OnShipTargetLost?.Invoke(this, EventArgs.Empty);
+                continue;
+            }
+
+            if (!targetDead && this.closestShip != null) this.closestShip.GetComponent<Ship>().OnHealthChanged -= IsTargetDead;
+            this.closestShip = closestShip;
+            OnShipTargetFound?.Invoke(closestShip, Mathf.Sqrt(shortestSqrDist));
+
             targetDead = false;
 
             closestShip.GetComponent<Ship>().OnHealthChanged += IsTargetDead;
 
-            time += changedTargetShootDelay;
+            shootCdTime += changedTargetShootDelay;
                     
             while (!shotReady && !targetDead)
             {
-                RotateShipTowardsTarget(closestShip.transform);
+                RotateTowardsTarget(closestShip.transform);
 
                 yield return null;
             }
 
             while (!targetDead)
             {
-                Shoot(closestShip.transform);
-                time = shootDelay;
+                Shoot(closestShip.transform, 0, transform.rotation.eulerAngles.z);
+                shootCdTime = shootDelay;
                 shotReady = false;
                 
                 while (!shotReady && !targetDead)
                 {
-                    RotateShipTowardsTarget(closestShip.transform);
+                    RotateTowardsTarget(closestShip.transform);
                             
                     yield return null;
                 }
@@ -110,7 +130,7 @@ public class ShootBehavior : MonoBehaviour
         }
     }
 
-    private void RotateShipTowardsTarget(Transform targetTransform)
+    protected virtual void RotateTowardsTarget(Transform targetTransform)
     {
         Vector3 dir = (targetTransform.position - transform.position).normalized;
 
@@ -121,7 +141,7 @@ public class ShootBehavior : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(currentRot, targetRot, Time.deltaTime * rotSpeed);
     }
     
-    private void Shoot(Transform target)
+    protected virtual void Shoot(Transform target, int damage, float shotAngle)
     {
         Vector3 pos = transform.position;
         Vector3 spawnPos = new Vector3(pos.x, pos.y, -2);
@@ -129,7 +149,7 @@ public class ShootBehavior : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
         
         BulletBehavior bulletBehavior = bullet.GetComponent<BulletBehavior>();
-        bulletBehavior.InitiateBulletValues(target.transform, transform.rotation.eulerAngles.z, GetComponent<Ship>().DamageStrength);
+        bulletBehavior.InitiateBulletValues(target.transform, shotAngle, damage);
     }
     
     private bool IsTargetDead(int health)
@@ -140,5 +160,10 @@ public class ShootBehavior : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private void OnDisable()
+    {
+       // if (!targetDead) closestShip.GetComponent<Ship>().OnHealthChanged -= IsTargetDead;
     }
 }

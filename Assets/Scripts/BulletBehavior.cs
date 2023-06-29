@@ -19,13 +19,12 @@ public class BulletBehavior : MonoBehaviour
 
     private Transform targetTransform;
     
-    public void InitiateBulletValues(Transform targetTransform, float shipRotation, int damage)
+    public void InitiateBulletValues(Transform targetTransform, float shipRotationRadians, int damage)
     {
         targetTransform.GetComponent<Ship>().OnHealthChanged += IsTargetDead;
 
-        float angle = (shipRotation + 90) * Mathf.Deg2Rad;
-        float x = Mathf.Cos(angle);
-        float y = Mathf.Sin(angle);
+        float x = Mathf.Cos(shipRotationRadians);
+        float y = Mathf.Sin(shipRotationRadians);
 
         initialDir = new Vector3(x, y, 0); // direction the ship is facing
 

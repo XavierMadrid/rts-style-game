@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1356065117280079991}
   - component: {fileID: 8973598963778340194}
   - component: {fileID: 5720584839470120426}
+  - component: {fileID: -3620003068439464909}
   m_Layer: 0
   m_Name: TurretHex
   m_TagString: Untagged
@@ -111,6 +112,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0436bffeea214b8290e920216703bee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-3620003068439464909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3245068968175741333}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d1558cafd77146b8bef21086d1696c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 7502851799537605230, guid: d2d1cdb3edee34fecbda6310a88ccb81, type: 3}

@@ -112,7 +112,6 @@ public class HexBuilder : MonoBehaviour
     {
         if (BuildMode)
         {
-            Debug.Log(BuildMode);
             hexPos = mainCam.ScreenToWorldPoint(mousePosition.ReadValue<Vector2>()).SnapWorld();
             hexPos = new Vector3(hexPos.x, hexPos.y, -2);
             bluePrintHex.transform.position = hexPos;

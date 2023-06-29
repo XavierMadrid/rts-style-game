@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -6,6 +7,14 @@ public class EnemyShipBehavior : ShipBehavior
     private float speed = .01f;
 
     private bool currentlyMoving = false;
+
+    private ShootBehavior enemyShootBehavior;
+
+    void Awake()
+    {
+        enemyShootBehavior = GetComponent<EnemyShootBehavior>();
+        enemyShootBehavior.OnShipTargetLost += DetermineActionWithoutTarget;
+    }
 
     // Update is called once per frame
     void Update()
@@ -22,6 +31,46 @@ public class EnemyShipBehavior : ShipBehavior
             if (currentlyMoving) currentlyMoving = false;
             StartCoroutine(MoveShip(mousePos, dist, speed));
         }
+        
+        
+    }
+
+    private void DetermineActionWithoutTarget(object sender, EventArgs e)
+    {
+        float action1Weight = 0, 
+            action2Weight = 0;
+
+        action1Weight = MoveToCenterHexAction(action1Weight);
+        action2Weight = AttackDefenseHexAction(action2Weight);
+        
+    }
+
+    private float MoveToCenterHexAction(float weight)
+    {
+        float scalar = 1;
+        float maxDist = 550f;
+        float dist = Vector3.Distance(transform.position, ManagerReferences.Instance.HexBuilder.CenterHex.transform.position);
+
+        weight = scalar * dist / maxDist * 100;
+
+        if (weight < 10) weight = 10;
+        return weight;
+    }
+
+    private float AttackDefenseHexAction(float weight)
+    {
+        foreach (var hex in ManagerReferences.Instance.HexBuilder.HexPosDict)
+        {
+            if (Vector3.Distance(transform.position, hex.Value.transform.position) >
+                enemyShootBehavior.CurrentRange) continue;
+
+            if (hex.Value.TryGetComponent<IDamageableHex>(out var damageableHex))
+            {
+                weight += 20;
+            }
+        }
+
+        return weight;
     }
 
     private IEnumerator MoveShip(Vector3 targetPos, float dist, float speed)
@@ -64,5 +113,10 @@ public class EnemyShipBehavior : ShipBehavior
         }
 
         currentlyMoving = false;
+    }
+
+    private void OnDisable()
+    {
+        enemyShootBehavior.OnShipTargetLost -= DetermineActionWithoutTarget;
     }
 }
