@@ -11,7 +11,7 @@ public class HexBuilder : MonoBehaviour
     [SerializeField] private Camera mainCam = null;
     [SerializeField] private GameObject hexExample = null;
 
-    private PlayerControls playerControls = null;
+    private PlayerControls playerControls;
     private InputAction mousePosition;
     private InputAction leftClick;
     private InputAction rightClick;
@@ -30,7 +30,7 @@ public class HexBuilder : MonoBehaviour
     private static readonly Color StarCollectorHexColor = new(.71f, .286f, 0, 1);
     private static readonly Color TurretHexColor = new(.6f, .5f, 0, 1);
 
-    public static readonly HexTileType CENTER_HEX = new("Center Hex", CenterHexColor, 0, null, true);
+    public static readonly HexTileType CENTER_HEX = new("Center Hex", CenterHexColor, 0, null, true, true);
     
     public static readonly HexTileType GATE_HEX = new("Connector Hex",  GateHexColor, 1, 
         new ResourcePrice[] {new(ResourceManager.METAL, 30)});
@@ -48,20 +48,24 @@ public class HexBuilder : MonoBehaviour
         new ResourcePrice[] {new(ResourceManager.METAL, 200)}, true);
     
     public static readonly HexTileType TURRET_HEX = new("Turret Hex",  TurretHexColor, 6, 
-        new ResourcePrice[] {new(ResourceManager.METAL, 200), new(ResourceManager.GOLD, 60)}, true);
+        new ResourcePrice[] {new(ResourceManager.METAL, 200), new(ResourceManager.GOLD, 60)}, true, true);
 
     [FormerlySerializedAs("hexPrefabs")] [FormerlySerializedAs("hexTypes")] [SerializeField] private GameObject[] hexTileTypePrefabs;
 
     // an energy hex refers to any hex that either generates, transfers, or uses energy (aka any hex related to energy)
     public event Action<GameObject, Hex> OnEnergyHexPlaced;
-    
+    public event Action<Hex, GameObject> OnDisableableHexPlaced;
+
     private Color failedHexPlaceColor = new(1, 0, 0, .5f);
 
     public Dictionary<Hex, GameObject> HexPosDict = new ();
     public Dictionary<Hex, GameObject> EnergyHexPosDict = new ();
+    public Dictionary<Hex, GameObject> DisableableHexPosDict = new ();
+    
     [HideInInspector] public GameObject CenterHex;
     private GameObject hexPrefabSelected;
     private bool isEnergyHex;
+    private bool isDisableable;
     private Color hexColor;
     private ResourcePrice[] resourcePrices;
     private GameObject bluePrintHex;
@@ -198,6 +202,7 @@ public class HexBuilder : MonoBehaviour
         hexColor = hexType.HexColor;
         resourcePrices = hexType.ResourcePrices;
         isEnergyHex = hexType.IsEnergyHex;
+        isDisableable = hexType.IsDisableable;
         
         StartCoroutine(BluePrintHexBlink());
     }
@@ -258,6 +263,13 @@ public class HexBuilder : MonoBehaviour
         {
             EnergyHexPosDict.Add(hexPos, hexObject);
             OnEnergyHexPlaced?.Invoke(hexObject, hexPos);
+        }
+
+        if (isDisableable)
+        {
+            Debug.Log("disableable");
+            DisableableHexPosDict.Add(hexPos, hexObject);
+            OnDisableableHexPlaced?.Invoke(hexPos, hexObject);
         }
     }
 
@@ -347,16 +359,19 @@ public class HexTileType
     public int PrefabID { get; private set; }
     public ResourcePrice[] ResourcePrices { get; private set; }
     public bool IsEnergyHex { get; private set; }
+    public bool IsDisableable { get; private set; }
     public InputAction HexInputAction { get; set; }
 
     //Remember prefab must be assigned at runtime
-    public HexTileType(string hexTileName, Color hexColor, int hexPrefabID, ResourcePrice[] resourcePrices = null, bool isEnergyHex = false, InputAction hexInputAction = null)
+    public HexTileType(string hexTileName, Color hexColor, int hexPrefabID, ResourcePrice[] resourcePrices = null, 
+        bool isEnergyHex = false, bool isDisableable = false, InputAction hexInputAction = null)
     {
         TileName = hexTileName;
         HexColor = hexColor;
         PrefabID = Mathf.Clamp(hexPrefabID, 0, 99);
         ResourcePrices = resourcePrices;
         IsEnergyHex = isEnergyHex;
+        IsDisableable = isDisableable;
         HexInputAction = hexInputAction;
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class WorkshopHex : MonoBehaviour
+public class WorkshopHex : HexTypeBehavior
 {
     [SerializeField] protected GameObject shipUnit = null;
     protected SpriteRenderer sr;

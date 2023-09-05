@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnergyHex : MonoBehaviour
+public class EnergyHex : HexTypeBehavior
 {
     protected List<GameObject> linkedHexes = new ();
     
@@ -56,7 +56,7 @@ public class EnergyHex : MonoBehaviour
             break;
         }
 
-        if (activatedHexesCount > 0) HexActivated = true;
+        HexActivated = activatedHexesCount > 0;
     }
 
     private void InitialSearchForLinks()

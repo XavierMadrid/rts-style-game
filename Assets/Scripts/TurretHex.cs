@@ -11,22 +11,25 @@ public class TurretHex : EnergyHex
     private SpriteRenderer sr;
     private TurretHexShootBehavior turretHexsb;
 
+    private bool energySupplied;
+    
     protected override void Start()
     {
         sr = GetComponent<SpriteRenderer>();
         turretHexsb = GetComponent<TurretHexShootBehavior>();
+
+        
+        StartCoroutine(PassiveHealthRegen());
         
         base.Start();
     }
 
     protected override void HexActivation(bool value)
     {
-        turretHexsb.enabled = value;
-        
-        StartCoroutine(value ? FadeToColor(HexBuilder.TURRET_HEX.HexColor, poweredColor) 
-            : FadeToColor(poweredColor, HexBuilder.TURRET_HEX.HexColor));
+        energySupplied = value;
+        ObjectTargetable(value);
     }
-    
+
     private IEnumerator FadeToColor(Color startColor, Color targetColor)
     {
         float timeElapsed = 0;
@@ -39,5 +42,27 @@ public class TurretHex : EnergyHex
             yield return null;
         }
         sr.color = targetColor;
+    }
+    
+    protected override void ObjectTargetable(bool isTargetable)
+    {
+        if (energySupplied && AtMaxHealth && Disabled)
+        {
+            turretHexsb.enabled = true;
+            base.ObjectTargetable(true);
+
+            Disabled = false;
+            
+            StartCoroutine(FadeToColor(HexBuilder.TURRET_HEX.HexColor, poweredColor));
+        }
+        else if (!energySupplied || !AtMaxHealth && !Disabled)
+        {
+            turretHexsb.enabled = false;
+            base.ObjectTargetable(false);
+
+            Disabled = true;
+            
+            StartCoroutine(FadeToColor(poweredColor, HexBuilder.TURRET_HEX.HexColor));
+        }
     }
 }

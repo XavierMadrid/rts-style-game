@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Ship : MonoBehaviour
+public class Ship : Targetable
 {
     protected int Damage = 1;
 
@@ -21,39 +21,35 @@ public class Ship : MonoBehaviour
         set
         {
             health = Mathf.Clamp(value, 0, MaxHealth);
-            OnHealthChanged?.Invoke(health);
+            
+            HealthChanged(health);
+            // OnHealthChanged?.Invoke(health); it is handled in the HealthChanged() statement above.
+            
             if (health <= 0) DestroyShip();
         }
     }
-
-    public event Func<int, bool> OnHealthChanged;
     
     // Start is called before the first frame update
     void Start()
     {
         Health = MaxHealth;
     }
-
-    /// <summary>
-    /// Damage the target by an integer.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns>Remaining health of the target. If 0, the target is dead.</returns>
-    public int DamageShip(int value)
+    
+    public override void DamageObject(int damage)
     {
-        Health -= value;
-        return Health;
+        Health -= damage;
     }
 
     public virtual void DestroyShip()
     {
-        if (OnHealthChanged != null)
-        {
-            foreach (var subscriber in OnHealthChanged.GetInvocationList())
-            {
-                OnHealthChanged -= subscriber as Func<int, bool>;
-            }
-        }
+        // if (OnHealthChanged != null)
+        // {
+        //     foreach (var subscriber in OnHealthChanged.GetInvocationList())
+        //     {
+        //         OnHealthChanged -= subscriber as Func<int, bool>;
+        //     }
+        // }
+        ObjectTargetable(false);
         
         Destroy(gameObject);
     }

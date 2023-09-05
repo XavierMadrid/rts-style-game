@@ -4,6 +4,8 @@ public class BulletBehavior : MonoBehaviour
 {
     [SerializeField] private GameObject DEV_trailDot = null;
 
+    private Targetable targetcs;
+
     private int damage;
     private float t;
     private float initialDist;
@@ -21,7 +23,8 @@ public class BulletBehavior : MonoBehaviour
     
     public void InitiateBulletValues(Transform targetTransform, float shipRotationRadians, int damage)
     {
-        targetTransform.GetComponent<Ship>().OnHealthChanged += IsTargetDead;
+        targetcs = targetTransform.GetComponent<Targetable>();
+        targetcs.OnObjectTargetable += TargetDead;
 
         float x = Mathf.Cos(shipRotationRadians);
         float y = Mathf.Sin(shipRotationRadians);
@@ -56,6 +59,7 @@ public class BulletBehavior : MonoBehaviour
         }
             
         // cubic with linear term that falls off at curveStopT
+        
         transform.position += new Vector3(curveSpeed * dist.x / initialDist * t * t * t + straightSpeed * initialDir.x * (curveStopT - t), 
             curveSpeed * dist.y / initialDist * t * t * t + straightSpeed * initialDir.y * (curveStopT - t), 0); 
         
@@ -72,25 +76,18 @@ public class BulletBehavior : MonoBehaviour
 
     private void TargetReached()
     {
-        int remainingHealth = targetTransform.GetComponent<Ship>().DamageShip(damage);
-
-        if (remainingHealth <= 0) targetDead = true;
+        if (!targetDead) targetcs.OnObjectTargetable -= TargetDead;
         
-        targetTransform.GetComponent<Ship>().OnHealthChanged -= IsTargetDead;
-
+        targetcs.DamageObject(damage);
+        
         Destroy(gameObject);
     }
-    
-    private bool IsTargetDead(int health)
-    {
-        if (health <= 0)
-        {
-            targetDead = true;
-            return true;
-        }
-        return false;
-    }
 
+    private void TargetDead(GameObject hexObject, bool isTargetable)
+    {
+        targetDead = !isTargetable;
+    }
+    
     private void DEV_BulletTrail(Vector3 pos, float t) // DEV
     {
         GameObject trailDot = Instantiate(DEV_trailDot, pos, Quaternion.identity);

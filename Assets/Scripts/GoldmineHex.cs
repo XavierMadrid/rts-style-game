@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GoldmineHex : MonoBehaviour
+public class GoldmineHex : HexTypeBehavior
 {
     private WaitForSeconds goldGenDelay = new(1f);
     

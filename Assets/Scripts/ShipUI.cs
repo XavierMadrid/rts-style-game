@@ -20,16 +20,18 @@ public class ShipUI : MonoBehaviour
     private Image healthBarMiddleImage;
     private Image healthBarRightImage;
 
+    private Targetable targetablecs;
     private Ship shipcs;
-
+    
     private bool isEnemy;
     private bool healthBarSetup = false;
     private bool displayHealthBar = false;
 
     private void Awake()
     {
+        targetablecs = GetComponent<Targetable>();
         shipcs = GetComponent<Ship>();
-        shipcs.OnHealthChanged += DetermineExtraHealthInfo;
+        targetablecs.OnHealthChanged += DetermineExtraHealthInfo;
     }
 
     private void Start()
@@ -50,7 +52,7 @@ public class ShipUI : MonoBehaviour
         
         InstantiateBarSegment(healthBarRight, shipcs.MaxHealth - 1);
         healthBarSetup = true;
-        DetermineExtraHealthInfo(shipcs.Health);
+        DetermineExtraHealthInfo(gameObject, shipcs.Health);
     }
 
     private void InstantiateBarSegment(GameObject barSegment, int barNumber)
@@ -68,9 +70,9 @@ public class ShipUI : MonoBehaviour
         barSegments[barNumber] = barSegmentClone;
     }
     
-    private bool DetermineExtraHealthInfo(int health)
+    private void DetermineExtraHealthInfo(GameObject damagedShip, int health)
     {
-        if (health == 0 || !healthBarSetup) return false;
+        if (health == 0 || !healthBarSetup) return;
 
         if (!displayHealthBar)
         {
@@ -86,14 +88,12 @@ public class ShipUI : MonoBehaviour
                 barSegments[i].SetActive(i < health);
             }
         }
-        
-        return true;
     }
 
     private void ExtendInfoRequested(bool extendInfo)
     {
         displayHealthBar = extendInfo;
-        DetermineExtraHealthInfo(shipcs.Health);
+        DetermineExtraHealthInfo(gameObject, shipcs.Health);
     }
 
     private void OnEnable()
@@ -103,7 +103,7 @@ public class ShipUI : MonoBehaviour
 
     private void OnDisable()
     {
-        shipcs.OnHealthChanged -= DetermineExtraHealthInfo;
+        targetablecs.OnHealthChanged -= DetermineExtraHealthInfo;
         ManagerReferences.Instance.UIManager.OnExtendInfoRequested -= ExtendInfoRequested;
     }
 }
