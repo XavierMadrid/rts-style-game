@@ -15,12 +15,12 @@ public class TargetableHexIdentifier : MonoBehaviour
         hexFound = false;
         if (!isTargetable)
         {
-            Hex hexPos = hexObject.transform.position.ToHex();
+            Hex hexPos = hexObject.transform.position.ToHex(); // get position of disabled hex
+            
             foreach (var targetable in TargetableHexes)
             {
                 if (hexPos.Equals(targetable.transform.position.ToHex()))
                 {
-                    Debug.Log("Hex found: " + gameObject);
                     TargetableHexes.Remove(hexObject);
                     hexFound = true;
                     
@@ -39,6 +39,7 @@ public class TargetableHexIdentifier : MonoBehaviour
     
     private void DisableableHexPlaced(Hex hexPos, GameObject hexObject)
     {
+        Debug.Log(hexObject + ": Hex event subscribed to HexDisabled.");
         hexObject.GetComponent<Targetable>().OnObjectTargetable += HexDisabled;
     }
 

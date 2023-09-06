@@ -17,6 +17,7 @@ public class EnergyHex : HexTypeBehavior
         {
             if (value != hexActivated)
             {
+                Debug.Log($"{transform.position}: HexActivated bool: {value}");
                 HexActivation(value);
                 hexActivated = value;
             }
@@ -56,7 +57,10 @@ public class EnergyHex : HexTypeBehavior
             break;
         }
 
-        HexActivated = activatedHexesCount > 0;
+        if (activatedHexesCount > 0)
+        {
+            HexActivated = true;
+        }
     }
 
     private void InitialSearchForLinks()
@@ -69,12 +73,12 @@ public class EnergyHex : HexTypeBehavior
             linkedHexes.Add(keyValuePair.Value);
             
             if (keyValuePair.Value.transform.position.ToHex().Equals(ManagerReferences.Instance.HexBuilder.CenterHex.transform.position.ToHex()) || 
-                keyValuePair.Value.GetComponent<EnergyHex>().HexActivated)
+                keyValuePair.Value.GetComponent<EnergyHex>().hexActivated)
             {
                 activatedHexesCount++;
             }
         }
-
+        Debug.Log("Activated Hex Count: " + activatedHexesCount);
         HexActivated = activatedHexesCount > 0;
     }
 

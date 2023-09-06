@@ -46,23 +46,47 @@ public class TurretHex : EnergyHex
     
     protected override void ObjectTargetable(bool isTargetable)
     {
-        if (energySupplied && AtMaxHealth && Disabled)
+        if (isTargetable)
         {
-            turretHexsb.enabled = true;
-            base.ObjectTargetable(true);
+            if (energySupplied && HealthPositive)
+            {
+                if (Disabled)
+                {
+                    turretHexsb.enabled = true;
+                    base.ObjectTargetable(true);
+                    
+                    Debug.Log($"ObjectTargetable({isTargetable}): energySupplied: {energySupplied}, AtMaxHealth: {HealthPositive}, Disabled: {Disabled}; true");
 
-            Disabled = false;
-            
-            StartCoroutine(FadeToColor(HexBuilder.TURRET_HEX.HexColor, poweredColor));
+                    StartCoroutine(FadeToColor(HexBuilder.TURRET_HEX.HexColor, poweredColor));
+                }
+            }
         }
-        else if (!energySupplied || !AtMaxHealth && !Disabled)
+        else if (!Disabled)
         {
             turretHexsb.enabled = false;
             base.ObjectTargetable(false);
-
-            Disabled = true;
+            
+            Debug.Log($"ObjectTargetable({isTargetable}): energySupplied: {energySupplied}, AtMaxHealth: {HealthPositive}, Disabled: {Disabled}; false");
             
             StartCoroutine(FadeToColor(poweredColor, HexBuilder.TURRET_HEX.HexColor));
         }
+        
+        
+        
+        
+        // if (energySupplied && HealthPositive && Disabled)
+        // {
+        //     turretHexsb.enabled = true;
+        //     base.ObjectTargetable(true);
+        //     
+        //     StartCoroutine(FadeToColor(HexBuilder.TURRET_HEX.HexColor, poweredColor));
+        // }
+        // else if ((!energySupplied || !HealthPositive) && !Disabled)
+        // {
+        //     turretHexsb.enabled = false;
+        //     base.ObjectTargetable(false);
+        //     
+        //     StartCoroutine(FadeToColor(poweredColor, HexBuilder.TURRET_HEX.HexColor));
+        // }
     }
 }

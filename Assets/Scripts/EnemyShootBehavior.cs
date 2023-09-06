@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class EnemyShootBehavior : ShootBehavior
 {
+    ObservableCollection<GameObject> targetableObjects = new();
+
     protected override void Shoot(Transform target, int damage, float shotAngle)
     {
         damage = GetComponent<Ship>().DamageStrength;
@@ -16,24 +18,35 @@ public class EnemyShootBehavior : ShootBehavior
         base.Shoot(target, damage, shotAngle);
     }
 
-    // private bool once;
+    // private bool once
     
     protected override ObservableCollection<GameObject> GetTargetableObjects()
     {
-        ObservableCollection<GameObject> targetableObjects = new();
+        targetableObjects.Clear();
 
-        targetableObjects = ManagerReferences.Instance.ShipController.ShipUnits;
-
-        targetableObjects.AddRange(ManagerReferences.Instance.TargetableHexIdentifier.TargetableHexes);
-
-        string output = "";
+        // Add all ships to targetable objects
+        foreach (var obj in ManagerReferences.Instance.ShipController.ShipUnits)
+        {
+            Debug.Log($"Added Ship {obj} to targetable objects");
+            targetableObjects.Add(obj);
+        }
+        
+        // Add all targetable hexes to targetable objects
+        foreach (var obj in ManagerReferences.Instance.TargetableHexIdentifier.TargetableHexes)
+        {
+            Debug.Log($"Added Hex {obj} to targetable objects");
+            targetableObjects.Add(obj);
+        }
+        
+        // For debugging
+        string output = $"{gameObject}:: ";
         foreach (var targetable in targetableObjects)
         {
             output += targetable + " : ";
         }
 
         Debug.Log(output);
-        
+        // --- //
         
         return targetableObjects;
     }

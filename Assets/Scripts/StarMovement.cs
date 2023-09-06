@@ -64,7 +64,7 @@ public class StarMovement : MonoBehaviour
     private IEnumerator FollowShip(Transform shipTransform)
     {
         float timeElapsed = 0;
-        float lerpDuration = 30; 
+        float lerpDuration = 30;
 
         while (timeElapsed < lerpDuration && !stopStarMovementTrigger)
         {

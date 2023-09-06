@@ -10,10 +10,10 @@ public abstract class ShootBehavior : MonoBehaviour
     [SerializeField] protected GameObject bulletPrefab = null;
     private GameObject closestTarget;
         
-    protected float ShootDelay = 2f;
+    protected float ShootDelay = 2f; // time between shots
 
     private bool targetDeadVar;
-    private bool targetDead
+    private bool targetDead // disabled hexes are dead as well
     {
         get => targetDeadVar;
         set
@@ -74,11 +74,11 @@ public abstract class ShootBehavior : MonoBehaviour
         {
             float sqrRange = Range * Range;
 
-            yield return searchDelayInterval;
+            yield return searchDelayInterval; // .05 sec pause
             
-            Vector3 currentPos = transform.position;
+            Vector3 currentPos = transform.position; // cache current pos
 
-            var objects = GetTargetableObjects();
+            var objects = GetTargetableObjects(); 
 
             float shortestSqrDist = sqrRange + 50;
             GameObject closestTarget = null;
@@ -96,16 +96,14 @@ public abstract class ShootBehavior : MonoBehaviour
                 }
             }
 
-            if (this.closestTarget != null)
-            {
-                this.closestTarget.GetComponent<Targetable>().OnObjectTargetable -= TargetDead;
-                Debug.Log("Unsubscribed to death.");
-            }
-
             if (closestTarget == null)
             {
                 OnShipTargetLost?.Invoke(this, EventArgs.Empty);
                 Debug.Log(gameObject + ": continued.");
+                
+                
+                // -------------- If a suitably close object is not found, code is not ran past the 'continue' below ----------- //
+
                 continue;
             }
 
@@ -116,10 +114,10 @@ public abstract class ShootBehavior : MonoBehaviour
 
             targetDead = false;
             closestTarget.GetComponent<Targetable>().OnObjectTargetable += TargetDead;
-            Debug.Log("Resubscribed to death.");
+            Debug.Log("Resubscribed to TargetDead using new closest object.");
 
-            shootCdTime += changedTargetShootDelay;
-                    
+            shootCdTime += changedTargetShootDelay; // + .5 sec
+            
             while (!shotReady && !targetDead)
             {
                 RotateTowardsTarget(closestTarget.transform); // maybe make this func more general for any necessary animations/movements
@@ -129,12 +127,14 @@ public abstract class ShootBehavior : MonoBehaviour
 
             while (!targetDead)
             {
-                Debug.Log(gameObject + ": targetDead = " + targetDead);
-                Shoot(closestTarget.transform, 0, transform.rotation.eulerAngles.z);
-                shootCdTime = ShootDelay;
+                Debug.Log($"{gameObject}: targetDead = {targetDead}, target = {closestTarget}");
+                
+                Shoot(closestTarget.transform, 0, transform.rotation.eulerAngles.z); // Shoot!
+                
+                shootCdTime = ShootDelay; // 2 secs
                 shotReady = false;
                 
-                while (!shotReady && !targetDead)
+                while (!shotReady && !targetDead) // continue rotating towards the target while its not dead
                 {
                     RotateTowardsTarget(closestTarget.transform);
                             
@@ -144,6 +144,12 @@ public abstract class ShootBehavior : MonoBehaviour
                 yield return null;
             }
             
+            if (this.closestTarget != null)
+            {
+                this.closestTarget.GetComponent<Targetable>().OnObjectTargetable -= TargetDead;
+                Debug.Log("Unsubscribed to TargetDead check due to target death.");
+            }
+
             Debug.Log(gameObject + ": terminated search.");
         }
     }

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public abstract class Targetable : MonoBehaviour
 {
+    public bool Disabled;
+    
     public abstract void DamageObject(int damage);
 
     public event Action<GameObject, int> OnHealthChanged;
@@ -17,6 +19,11 @@ public abstract class Targetable : MonoBehaviour
 
     protected virtual void ObjectTargetable(bool isTargetable)
     {
+        Disabled = !isTargetable;
         OnObjectTargetable?.Invoke(gameObject, isTargetable);
+        if (Disabled == isTargetable)
+        {
+            
+        }
     }
 }
