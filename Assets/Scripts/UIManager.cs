@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,11 +18,18 @@ public class UIManager : MonoBehaviour
     private PlayerControls playerControls;
     private InputAction shift;
 
+    [SerializeField] private TextMeshProUGUI gameTimeText = null;
+    
     public event Action<bool> OnExtendInfoRequested;
 
     private void Awake()
     {
         playerControls = new PlayerControls();
+    }
+
+    private void Start()
+    {
+        ManagerReferences.Instance.EnemyHandler.OnGameTimeChanged += GameTimeChanged;
     }
 
     void Update()
@@ -49,8 +57,19 @@ public class UIManager : MonoBehaviour
         playerControls.UIActions.Enable();
     }
 
+    private void GameTimeChanged(int gameTime)
+    {
+        int hours = gameTime / 3600;
+        int minutes = gameTime / 60 % 60;
+        int seconds = gameTime % 60;
+
+        // XD
+        gameTimeText.text = hours == 0 ? seconds < 10 ? $"{minutes}:0{seconds}" : $"{minutes}:{seconds}" : minutes < 10 ? $"{hours}:0{minutes}:{seconds}" : $"{hours}:{minutes}:{seconds}";
+    }
+
     private void OnDisable()
     {
         playerControls.UIActions.Disable();
+        ManagerReferences.Instance.EnemyHandler.OnGameTimeChanged -= GameTimeChanged;
     }
 }

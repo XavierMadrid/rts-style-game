@@ -1,12 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemyHandler : MonoBehaviour
 {
     [SerializeField] private GameObject enemyShipUnitPrefab = null;
 
-    public float GameTime { get; private set; }
+    private int lastSecond;
+    
+    private float gameTime;
     private float waveTime;
     private int currentWaveNum;
     private int wavesReached;
@@ -43,11 +47,14 @@ public class EnemyHandler : MonoBehaviour
     private static readonly EnemyWave Wave19 = new(19, 1, 30);
     private static readonly EnemyWave Wave20 = new(20, 0.5f, 40);
 
+    public event Action<int> OnGameTimeChanged;
+    
     public ObservableCollection<GameObject> EnemyShips = new();
 
     void Start()
     {
-        waveTime = Wave1.PrepMinutes * 60;
+        lastSecond = 0;
+        waveTime = Wave1.PrepMinutes * 60; // convert minutes to seconds
     }
     
     // Update is called once per frame
@@ -61,17 +68,29 @@ public class EnemyHandler : MonoBehaviour
             
             EnemyShips.Add(enemyShipClone);
         }
+        
+        if (Input.GetKey(KeyCode.S)) // DEV
+        {
+            gameTime += 10;
+        }
 
-        GameTime += Time.deltaTime;
+        gameTime += Time.deltaTime;
         waveTime -= Time.deltaTime;
         
         if (Input.GetKeyDown(KeyCode.T)) waveTime = 0; // DEV
 
         if (waveTime <= 0)
         {
-            PrepareEnemyWave(wavesReached < 20 ? waves[wavesReached] : Wave20);
+            PrepareEnemyWave(wavesReached < 20 ? waves[wavesReached] : Wave20); // use wave 20 as the spawn settings for waves 20 and beyond
 
             wavesReached++;
+        }
+
+        int currentSecond = Mathf.FloorToInt(gameTime);
+        if (lastSecond != currentSecond)
+        {
+            OnGameTimeChanged?.Invoke(currentSecond);
+            lastSecond = currentSecond;
         }
     }
 
