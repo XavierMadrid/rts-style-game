@@ -15,12 +15,12 @@ public class HexBuilder : MonoBehaviour
     private InputAction mousePosition;
     private InputAction leftClick;
     private InputAction rightClick;
-    private InputAction gateHexInputAction;
-    private InputAction powerHexInputAction;
-    private InputAction workshopHexInputAction;
-    private InputAction goldmineHexInputAction;
-    private InputAction starCollectorHexInputAction;
-    private InputAction turretHexInputAction;
+    private InputAction hexSlot1InputAction;
+    private InputAction hexSlot2InputAction;
+    private InputAction hexSlot3InputAction;
+    private InputAction hexSlot4InputAction;
+    private InputAction hexSlot5InputAction;
+    private InputAction hexSlot6InputAction;
 
     private static readonly Color CenterHexColor = new(.729f, .820f, 1, 1);
     private static readonly Color GateHexColor = new(.3208f, .3208f, .3208f, .6471f);
@@ -124,12 +124,12 @@ public class HexBuilder : MonoBehaviour
             rightClick.performed += context => BuildMode = false;
         }
 
-        gateHexInputAction.performed += context => CreateBluePrintHex(GATE_HEX);
-        powerHexInputAction.performed += context => CreateBluePrintHex(POWER_HEX);
-        workshopHexInputAction.performed += context => CreateBluePrintHex(WORKSHOP_HEX);
-        goldmineHexInputAction.performed += context => CreateBluePrintHex(GOLDMINE_HEX);
-        starCollectorHexInputAction.performed += context => CreateBluePrintHex(STAR_COLLECTOR_HEX);
-        turretHexInputAction.performed += context => CreateBluePrintHex(TURRET_HEX);
+        hexSlot1InputAction.performed += context => CreateBluePrintHex(GATE_HEX);
+        hexSlot2InputAction.performed += context => CreateBluePrintHex(POWER_HEX);
+        hexSlot3InputAction.performed += context => CreateBluePrintHex(WORKSHOP_HEX);
+        hexSlot4InputAction.performed += context => CreateBluePrintHex(GOLDMINE_HEX);
+        hexSlot5InputAction.performed += context => CreateBluePrintHex(STAR_COLLECTOR_HEX);
+        hexSlot6InputAction.performed += context => CreateBluePrintHex(TURRET_HEX);
     }
     
     private void CreateBluePrintHex(HexTileType hexType)
@@ -275,12 +275,12 @@ public class HexBuilder : MonoBehaviour
         mousePosition = playerControls.HexBuildingActions.MousePosition;
         leftClick = playerControls.HexBuildingActions.PlaceSelectedHex;
         rightClick = playerControls.HexBuildingActions.ExitBuildMode;
-        gateHexInputAction = playerControls.HexBuildingActions.SelectGateHex;
-        powerHexInputAction = playerControls.HexBuildingActions.SelectPowerHex;
-        workshopHexInputAction = playerControls.HexBuildingActions.SelectWorkshopHex;
-        goldmineHexInputAction = playerControls.HexBuildingActions.SelectGoldmineHex;
-        starCollectorHexInputAction = playerControls.HexBuildingActions.SelectStarCollectorHex;
-        turretHexInputAction = playerControls.HexBuildingActions.SelectTurretHex;
+        hexSlot1InputAction = playerControls.HexBuildingActions.SelectHexSlot1;
+        hexSlot2InputAction = playerControls.HexBuildingActions.SelectHexSlot2;
+        hexSlot3InputAction = playerControls.HexBuildingActions.SelectHexSlot3;
+        hexSlot4InputAction = playerControls.HexBuildingActions.SelectHexSlot4;
+        hexSlot5InputAction = playerControls.HexBuildingActions.SelectHexSlot5;
+        hexSlot6InputAction = playerControls.HexBuildingActions.SelectHexSlot6;
         playerControls.HexBuildingActions.Enable();
     }
 

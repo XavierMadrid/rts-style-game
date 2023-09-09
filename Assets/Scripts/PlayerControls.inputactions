@@ -6,7 +6,7 @@
             "id": "c7dcb1c7-74e8-489f-8aea-bdd894c70ed0",
             "actions": [
                 {
-                    "name": "SelectGateHex",
+                    "name": "SelectHexSlot1",
                     "type": "Button",
                     "id": "3859ec15-999a-4713-8211-9f4f83bc249e",
                     "expectedControlType": "Button",
@@ -15,7 +15,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SelectPowerHex",
+                    "name": "SelectHexSlot2",
                     "type": "Button",
                     "id": "797043bd-8d22-459c-bdb3-38193d469274",
                     "expectedControlType": "Button",
@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SelectWorkshopHex",
+                    "name": "SelectHexSlot3",
                     "type": "Button",
                     "id": "633b6ee8-9aa6-4faa-b55a-d939dbf9a991",
                     "expectedControlType": "Button",
@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SelectGoldmineHex",
+                    "name": "SelectHexSlot4",
                     "type": "Button",
                     "id": "863db267-94a8-4703-a84b-5ad560be3695",
                     "expectedControlType": "Button",
@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SelectStarCollectorHex",
+                    "name": "SelectHexSlot5",
                     "type": "Button",
                     "id": "70ac3ebe-7c49-4d61-8a7e-057d835e4420",
                     "expectedControlType": "Button",
@@ -51,7 +51,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SelectTurretHex",
+                    "name": "SelectHexSlot6",
                     "type": "Button",
                     "id": "e21db602-e66b-4df6-a915-6aae6d5e92aa",
                     "expectedControlType": "Button",
@@ -95,7 +95,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SelectGateHex",
+                    "action": "SelectHexSlot1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -106,7 +106,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SelectPowerHex",
+                    "action": "SelectHexSlot2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -117,7 +117,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SelectWorkshopHex",
+                    "action": "SelectHexSlot3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -128,7 +128,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SelectGoldmineHex",
+                    "action": "SelectHexSlot4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -139,7 +139,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SelectStarCollectorHex",
+                    "action": "SelectHexSlot5",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -183,7 +183,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SelectTurretHex",
+                    "action": "SelectHexSlot6",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -210,6 +210,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "MoveShip",
+                    "type": "Button",
+                    "id": "83565f8c-cd35-4545-8b8b-ae58bc181815",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -232,6 +241,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "MousePosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ccd67d12-73cc-4da8-9205-e0d9bb3e9a25",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveShip",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

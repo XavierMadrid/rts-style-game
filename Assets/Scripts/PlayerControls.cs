@@ -28,7 +28,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ""id"": ""c7dcb1c7-74e8-489f-8aea-bdd894c70ed0"",
             ""actions"": [
                 {
-                    ""name"": ""SelectGateHex"",
+                    ""name"": ""SelectHexSlot1"",
                     ""type"": ""Button"",
                     ""id"": ""3859ec15-999a-4713-8211-9f4f83bc249e"",
                     ""expectedControlType"": ""Button"",
@@ -37,7 +37,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SelectPowerHex"",
+                    ""name"": ""SelectHexSlot2"",
                     ""type"": ""Button"",
                     ""id"": ""797043bd-8d22-459c-bdb3-38193d469274"",
                     ""expectedControlType"": ""Button"",
@@ -46,7 +46,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SelectWorkshopHex"",
+                    ""name"": ""SelectHexSlot3"",
                     ""type"": ""Button"",
                     ""id"": ""633b6ee8-9aa6-4faa-b55a-d939dbf9a991"",
                     ""expectedControlType"": ""Button"",
@@ -55,7 +55,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SelectGoldmineHex"",
+                    ""name"": ""SelectHexSlot4"",
                     ""type"": ""Button"",
                     ""id"": ""863db267-94a8-4703-a84b-5ad560be3695"",
                     ""expectedControlType"": ""Button"",
@@ -64,7 +64,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SelectStarCollectorHex"",
+                    ""name"": ""SelectHexSlot5"",
                     ""type"": ""Button"",
                     ""id"": ""70ac3ebe-7c49-4d61-8a7e-057d835e4420"",
                     ""expectedControlType"": ""Button"",
@@ -73,7 +73,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SelectTurretHex"",
+                    ""name"": ""SelectHexSlot6"",
                     ""type"": ""Button"",
                     ""id"": ""e21db602-e66b-4df6-a915-6aae6d5e92aa"",
                     ""expectedControlType"": ""Button"",
@@ -117,7 +117,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SelectGateHex"",
+                    ""action"": ""SelectHexSlot1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -128,7 +128,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SelectPowerHex"",
+                    ""action"": ""SelectHexSlot2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -139,7 +139,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SelectWorkshopHex"",
+                    ""action"": ""SelectHexSlot3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -150,7 +150,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SelectGoldmineHex"",
+                    ""action"": ""SelectHexSlot4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -161,7 +161,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SelectStarCollectorHex"",
+                    ""action"": ""SelectHexSlot5"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -205,7 +205,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SelectTurretHex"",
+                    ""action"": ""SelectHexSlot6"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -232,6 +232,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MoveShip"",
+                    ""type"": ""Button"",
+                    ""id"": ""83565f8c-cd35-4545-8b8b-ae58bc181815"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -254,6 +263,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ccd67d12-73cc-4da8-9205-e0d9bb3e9a25"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveShip"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -360,12 +380,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
 }");
         // HexBuildingActions
         m_HexBuildingActions = asset.FindActionMap("HexBuildingActions", throwIfNotFound: true);
-        m_HexBuildingActions_SelectGateHex = m_HexBuildingActions.FindAction("SelectGateHex", throwIfNotFound: true);
-        m_HexBuildingActions_SelectPowerHex = m_HexBuildingActions.FindAction("SelectPowerHex", throwIfNotFound: true);
-        m_HexBuildingActions_SelectWorkshopHex = m_HexBuildingActions.FindAction("SelectWorkshopHex", throwIfNotFound: true);
-        m_HexBuildingActions_SelectGoldmineHex = m_HexBuildingActions.FindAction("SelectGoldmineHex", throwIfNotFound: true);
-        m_HexBuildingActions_SelectStarCollectorHex = m_HexBuildingActions.FindAction("SelectStarCollectorHex", throwIfNotFound: true);
-        m_HexBuildingActions_SelectTurretHex = m_HexBuildingActions.FindAction("SelectTurretHex", throwIfNotFound: true);
+        m_HexBuildingActions_SelectHexSlot1 = m_HexBuildingActions.FindAction("SelectHexSlot1", throwIfNotFound: true);
+        m_HexBuildingActions_SelectHexSlot2 = m_HexBuildingActions.FindAction("SelectHexSlot2", throwIfNotFound: true);
+        m_HexBuildingActions_SelectHexSlot3 = m_HexBuildingActions.FindAction("SelectHexSlot3", throwIfNotFound: true);
+        m_HexBuildingActions_SelectHexSlot4 = m_HexBuildingActions.FindAction("SelectHexSlot4", throwIfNotFound: true);
+        m_HexBuildingActions_SelectHexSlot5 = m_HexBuildingActions.FindAction("SelectHexSlot5", throwIfNotFound: true);
+        m_HexBuildingActions_SelectHexSlot6 = m_HexBuildingActions.FindAction("SelectHexSlot6", throwIfNotFound: true);
         m_HexBuildingActions_ExitBuildMode = m_HexBuildingActions.FindAction("ExitBuildMode", throwIfNotFound: true);
         m_HexBuildingActions_PlaceSelectedHex = m_HexBuildingActions.FindAction("PlaceSelectedHex", throwIfNotFound: true);
         m_HexBuildingActions_MousePosition = m_HexBuildingActions.FindAction("MousePosition", throwIfNotFound: true);
@@ -373,6 +393,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_ShipControlActions = asset.FindActionMap("ShipControlActions", throwIfNotFound: true);
         m_ShipControlActions_SelectShip = m_ShipControlActions.FindAction("SelectShip", throwIfNotFound: true);
         m_ShipControlActions_MousePosition = m_ShipControlActions.FindAction("MousePosition", throwIfNotFound: true);
+        m_ShipControlActions_MoveShip = m_ShipControlActions.FindAction("MoveShip", throwIfNotFound: true);
         // CameraControlActions
         m_CameraControlActions = asset.FindActionMap("CameraControlActions", throwIfNotFound: true);
         m_CameraControlActions_Pause = m_CameraControlActions.FindAction("Pause", throwIfNotFound: true);
@@ -442,12 +463,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     // HexBuildingActions
     private readonly InputActionMap m_HexBuildingActions;
     private List<IHexBuildingActionsActions> m_HexBuildingActionsActionsCallbackInterfaces = new List<IHexBuildingActionsActions>();
-    private readonly InputAction m_HexBuildingActions_SelectGateHex;
-    private readonly InputAction m_HexBuildingActions_SelectPowerHex;
-    private readonly InputAction m_HexBuildingActions_SelectWorkshopHex;
-    private readonly InputAction m_HexBuildingActions_SelectGoldmineHex;
-    private readonly InputAction m_HexBuildingActions_SelectStarCollectorHex;
-    private readonly InputAction m_HexBuildingActions_SelectTurretHex;
+    private readonly InputAction m_HexBuildingActions_SelectHexSlot1;
+    private readonly InputAction m_HexBuildingActions_SelectHexSlot2;
+    private readonly InputAction m_HexBuildingActions_SelectHexSlot3;
+    private readonly InputAction m_HexBuildingActions_SelectHexSlot4;
+    private readonly InputAction m_HexBuildingActions_SelectHexSlot5;
+    private readonly InputAction m_HexBuildingActions_SelectHexSlot6;
     private readonly InputAction m_HexBuildingActions_ExitBuildMode;
     private readonly InputAction m_HexBuildingActions_PlaceSelectedHex;
     private readonly InputAction m_HexBuildingActions_MousePosition;
@@ -455,12 +476,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         private @PlayerControls m_Wrapper;
         public HexBuildingActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @SelectGateHex => m_Wrapper.m_HexBuildingActions_SelectGateHex;
-        public InputAction @SelectPowerHex => m_Wrapper.m_HexBuildingActions_SelectPowerHex;
-        public InputAction @SelectWorkshopHex => m_Wrapper.m_HexBuildingActions_SelectWorkshopHex;
-        public InputAction @SelectGoldmineHex => m_Wrapper.m_HexBuildingActions_SelectGoldmineHex;
-        public InputAction @SelectStarCollectorHex => m_Wrapper.m_HexBuildingActions_SelectStarCollectorHex;
-        public InputAction @SelectTurretHex => m_Wrapper.m_HexBuildingActions_SelectTurretHex;
+        public InputAction @SelectHexSlot1 => m_Wrapper.m_HexBuildingActions_SelectHexSlot1;
+        public InputAction @SelectHexSlot2 => m_Wrapper.m_HexBuildingActions_SelectHexSlot2;
+        public InputAction @SelectHexSlot3 => m_Wrapper.m_HexBuildingActions_SelectHexSlot3;
+        public InputAction @SelectHexSlot4 => m_Wrapper.m_HexBuildingActions_SelectHexSlot4;
+        public InputAction @SelectHexSlot5 => m_Wrapper.m_HexBuildingActions_SelectHexSlot5;
+        public InputAction @SelectHexSlot6 => m_Wrapper.m_HexBuildingActions_SelectHexSlot6;
         public InputAction @ExitBuildMode => m_Wrapper.m_HexBuildingActions_ExitBuildMode;
         public InputAction @PlaceSelectedHex => m_Wrapper.m_HexBuildingActions_PlaceSelectedHex;
         public InputAction @MousePosition => m_Wrapper.m_HexBuildingActions_MousePosition;
@@ -473,24 +494,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_HexBuildingActionsActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_HexBuildingActionsActionsCallbackInterfaces.Add(instance);
-            @SelectGateHex.started += instance.OnSelectGateHex;
-            @SelectGateHex.performed += instance.OnSelectGateHex;
-            @SelectGateHex.canceled += instance.OnSelectGateHex;
-            @SelectPowerHex.started += instance.OnSelectPowerHex;
-            @SelectPowerHex.performed += instance.OnSelectPowerHex;
-            @SelectPowerHex.canceled += instance.OnSelectPowerHex;
-            @SelectWorkshopHex.started += instance.OnSelectWorkshopHex;
-            @SelectWorkshopHex.performed += instance.OnSelectWorkshopHex;
-            @SelectWorkshopHex.canceled += instance.OnSelectWorkshopHex;
-            @SelectGoldmineHex.started += instance.OnSelectGoldmineHex;
-            @SelectGoldmineHex.performed += instance.OnSelectGoldmineHex;
-            @SelectGoldmineHex.canceled += instance.OnSelectGoldmineHex;
-            @SelectStarCollectorHex.started += instance.OnSelectStarCollectorHex;
-            @SelectStarCollectorHex.performed += instance.OnSelectStarCollectorHex;
-            @SelectStarCollectorHex.canceled += instance.OnSelectStarCollectorHex;
-            @SelectTurretHex.started += instance.OnSelectTurretHex;
-            @SelectTurretHex.performed += instance.OnSelectTurretHex;
-            @SelectTurretHex.canceled += instance.OnSelectTurretHex;
+            @SelectHexSlot1.started += instance.OnSelectHexSlot1;
+            @SelectHexSlot1.performed += instance.OnSelectHexSlot1;
+            @SelectHexSlot1.canceled += instance.OnSelectHexSlot1;
+            @SelectHexSlot2.started += instance.OnSelectHexSlot2;
+            @SelectHexSlot2.performed += instance.OnSelectHexSlot2;
+            @SelectHexSlot2.canceled += instance.OnSelectHexSlot2;
+            @SelectHexSlot3.started += instance.OnSelectHexSlot3;
+            @SelectHexSlot3.performed += instance.OnSelectHexSlot3;
+            @SelectHexSlot3.canceled += instance.OnSelectHexSlot3;
+            @SelectHexSlot4.started += instance.OnSelectHexSlot4;
+            @SelectHexSlot4.performed += instance.OnSelectHexSlot4;
+            @SelectHexSlot4.canceled += instance.OnSelectHexSlot4;
+            @SelectHexSlot5.started += instance.OnSelectHexSlot5;
+            @SelectHexSlot5.performed += instance.OnSelectHexSlot5;
+            @SelectHexSlot5.canceled += instance.OnSelectHexSlot5;
+            @SelectHexSlot6.started += instance.OnSelectHexSlot6;
+            @SelectHexSlot6.performed += instance.OnSelectHexSlot6;
+            @SelectHexSlot6.canceled += instance.OnSelectHexSlot6;
             @ExitBuildMode.started += instance.OnExitBuildMode;
             @ExitBuildMode.performed += instance.OnExitBuildMode;
             @ExitBuildMode.canceled += instance.OnExitBuildMode;
@@ -504,24 +525,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
 
         private void UnregisterCallbacks(IHexBuildingActionsActions instance)
         {
-            @SelectGateHex.started -= instance.OnSelectGateHex;
-            @SelectGateHex.performed -= instance.OnSelectGateHex;
-            @SelectGateHex.canceled -= instance.OnSelectGateHex;
-            @SelectPowerHex.started -= instance.OnSelectPowerHex;
-            @SelectPowerHex.performed -= instance.OnSelectPowerHex;
-            @SelectPowerHex.canceled -= instance.OnSelectPowerHex;
-            @SelectWorkshopHex.started -= instance.OnSelectWorkshopHex;
-            @SelectWorkshopHex.performed -= instance.OnSelectWorkshopHex;
-            @SelectWorkshopHex.canceled -= instance.OnSelectWorkshopHex;
-            @SelectGoldmineHex.started -= instance.OnSelectGoldmineHex;
-            @SelectGoldmineHex.performed -= instance.OnSelectGoldmineHex;
-            @SelectGoldmineHex.canceled -= instance.OnSelectGoldmineHex;
-            @SelectStarCollectorHex.started -= instance.OnSelectStarCollectorHex;
-            @SelectStarCollectorHex.performed -= instance.OnSelectStarCollectorHex;
-            @SelectStarCollectorHex.canceled -= instance.OnSelectStarCollectorHex;
-            @SelectTurretHex.started -= instance.OnSelectTurretHex;
-            @SelectTurretHex.performed -= instance.OnSelectTurretHex;
-            @SelectTurretHex.canceled -= instance.OnSelectTurretHex;
+            @SelectHexSlot1.started -= instance.OnSelectHexSlot1;
+            @SelectHexSlot1.performed -= instance.OnSelectHexSlot1;
+            @SelectHexSlot1.canceled -= instance.OnSelectHexSlot1;
+            @SelectHexSlot2.started -= instance.OnSelectHexSlot2;
+            @SelectHexSlot2.performed -= instance.OnSelectHexSlot2;
+            @SelectHexSlot2.canceled -= instance.OnSelectHexSlot2;
+            @SelectHexSlot3.started -= instance.OnSelectHexSlot3;
+            @SelectHexSlot3.performed -= instance.OnSelectHexSlot3;
+            @SelectHexSlot3.canceled -= instance.OnSelectHexSlot3;
+            @SelectHexSlot4.started -= instance.OnSelectHexSlot4;
+            @SelectHexSlot4.performed -= instance.OnSelectHexSlot4;
+            @SelectHexSlot4.canceled -= instance.OnSelectHexSlot4;
+            @SelectHexSlot5.started -= instance.OnSelectHexSlot5;
+            @SelectHexSlot5.performed -= instance.OnSelectHexSlot5;
+            @SelectHexSlot5.canceled -= instance.OnSelectHexSlot5;
+            @SelectHexSlot6.started -= instance.OnSelectHexSlot6;
+            @SelectHexSlot6.performed -= instance.OnSelectHexSlot6;
+            @SelectHexSlot6.canceled -= instance.OnSelectHexSlot6;
             @ExitBuildMode.started -= instance.OnExitBuildMode;
             @ExitBuildMode.performed -= instance.OnExitBuildMode;
             @ExitBuildMode.canceled -= instance.OnExitBuildMode;
@@ -554,12 +575,14 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IShipControlActionsActions> m_ShipControlActionsActionsCallbackInterfaces = new List<IShipControlActionsActions>();
     private readonly InputAction m_ShipControlActions_SelectShip;
     private readonly InputAction m_ShipControlActions_MousePosition;
+    private readonly InputAction m_ShipControlActions_MoveShip;
     public struct ShipControlActionsActions
     {
         private @PlayerControls m_Wrapper;
         public ShipControlActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @SelectShip => m_Wrapper.m_ShipControlActions_SelectShip;
         public InputAction @MousePosition => m_Wrapper.m_ShipControlActions_MousePosition;
+        public InputAction @MoveShip => m_Wrapper.m_ShipControlActions_MoveShip;
         public InputActionMap Get() { return m_Wrapper.m_ShipControlActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -575,6 +598,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @MousePosition.started += instance.OnMousePosition;
             @MousePosition.performed += instance.OnMousePosition;
             @MousePosition.canceled += instance.OnMousePosition;
+            @MoveShip.started += instance.OnMoveShip;
+            @MoveShip.performed += instance.OnMoveShip;
+            @MoveShip.canceled += instance.OnMoveShip;
         }
 
         private void UnregisterCallbacks(IShipControlActionsActions instance)
@@ -585,6 +611,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @MousePosition.started -= instance.OnMousePosition;
             @MousePosition.performed -= instance.OnMousePosition;
             @MousePosition.canceled -= instance.OnMousePosition;
+            @MoveShip.started -= instance.OnMoveShip;
+            @MoveShip.performed -= instance.OnMoveShip;
+            @MoveShip.canceled -= instance.OnMoveShip;
         }
 
         public void RemoveCallbacks(IShipControlActionsActions instance)
@@ -712,12 +741,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     public UIActionsActions @UIActions => new UIActionsActions(this);
     public interface IHexBuildingActionsActions
     {
-        void OnSelectGateHex(InputAction.CallbackContext context);
-        void OnSelectPowerHex(InputAction.CallbackContext context);
-        void OnSelectWorkshopHex(InputAction.CallbackContext context);
-        void OnSelectGoldmineHex(InputAction.CallbackContext context);
-        void OnSelectStarCollectorHex(InputAction.CallbackContext context);
-        void OnSelectTurretHex(InputAction.CallbackContext context);
+        void OnSelectHexSlot1(InputAction.CallbackContext context);
+        void OnSelectHexSlot2(InputAction.CallbackContext context);
+        void OnSelectHexSlot3(InputAction.CallbackContext context);
+        void OnSelectHexSlot4(InputAction.CallbackContext context);
+        void OnSelectHexSlot5(InputAction.CallbackContext context);
+        void OnSelectHexSlot6(InputAction.CallbackContext context);
         void OnExitBuildMode(InputAction.CallbackContext context);
         void OnPlaceSelectedHex(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
@@ -726,6 +755,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnSelectShip(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
+        void OnMoveShip(InputAction.CallbackContext context);
     }
     public interface ICameraControlActionsActions
     {

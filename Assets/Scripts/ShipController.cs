@@ -45,16 +45,16 @@ public class ShipController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q)) // VERY TEMPORARY!
-        {
-            Vector3 pos = mainCam.ScreenToWorldPoint(Input.mousePosition);
-            pos = new Vector3(pos.x, pos.y, -1);
-            GameObject shipUnitClone = Instantiate(shipUnit, pos, Quaternion.identity);
-            ShipUnits.Add(shipUnitClone);
-        }
+        // if (Input.GetKeyDown(KeyCode.Q)) // VERY TEMPORARY!
+        // {
+        //     Vector3 pos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+        //     pos = new Vector3(pos.x, pos.y, -1);
+        //     GameObject shipUnitClone = Instantiate(shipUnit, pos, Quaternion.identity);
+        //     ShipUnits.Add(shipUnitClone);
+        // }
 
         // change to event to prevent this check every frame
-        if (ManagerReferences.Instance.HexBuilder.BuildMode)
+        if (ManagerReferences.Instance.HexBuilder.BuildMode || ManagerReferences.Instance.UIManager.ShopGUIOpen)
         {
             if (!unsubscribed)
             {
@@ -74,14 +74,17 @@ public class ShipController : MonoBehaviour
             selectionCircleClone.transform.position = midpoint;
             selectionCircleClone.transform.localScale = new Vector3(radius, radius, 1);
         }
-
+        
         leftClick.performed += BeginShipSelecting;
-        leftClick.canceled += ChooseShipSelectionProcess;
+        leftClick.canceled += ChooseShipSelectionProcess; 
         unsubscribed = false;
+        
     }
 
     private void BeginShipSelecting(InputAction.CallbackContext context)
     {
+        // if (ManagerReferences.Instance.UIManager.ShopGUIOpen) return;
+        
         circlePoint1 = mainCam.ScreenToWorldPoint(mousePosition.ReadValue<Vector2>());
         circlePoint1 = new Vector3(circlePoint1.x, circlePoint1.y, -3);
         selectionCircleClone = Instantiate(selectionCircle, circlePoint1, Quaternion.identity);
@@ -90,6 +93,8 @@ public class ShipController : MonoBehaviour
 
     private void ChooseShipSelectionProcess(InputAction.CallbackContext context)
     {
+        // if (ManagerReferences.Instance.UIManager.ShopGUIOpen) return;
+
         mouseHeldDown = false;
 
         circlePoint2 = mainCam.ScreenToWorldPoint(mousePosition.ReadValue<Vector2>());

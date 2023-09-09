@@ -5,11 +5,16 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
+using UnityEngine.InputSystem;
 
 public class ShipUnitBehavior : ShipBehavior
 {
     private Camera mainCam;
     private Collider2D col2D;
+
+    private PlayerControls playerControls;
+    private InputAction mousePosition;
+    private InputAction rightClick;
 
     private StarMovement lastActiveStarObject;
     private ShipController shipControllercs;
@@ -20,10 +25,12 @@ public class ShipUnitBehavior : ShipBehavior
     [SerializeField] private Color busyColor = new(1, .741f, 0f, 1);
     [FormerlySerializedAs("normalColor")] [SerializeField] private Color idleColor = new(.49f, .443f, .173f, 1);
 
+    private Vector3 mousePos;
 
     private readonly float movementSpeedConstant = .001f;
     private float speed = 0.05f;
     private bool controlled;
+    private bool unsubscribed;
     private bool cancelShipMoveTrigger = false;
     private int postLinkMoveCount = 2;
 
@@ -49,6 +56,11 @@ public class ShipUnitBehavior : ShipBehavior
     private ContactFilter2D noFilter;
     private Collider2D[] results = new Collider2D[10]; // could be too many spots
 
+    private void Awake()
+    {
+        playerControls = new PlayerControls();
+    }
+
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -63,24 +75,33 @@ public class ShipUnitBehavior : ShipBehavior
     // Update is called once per frame
     void Update()
     {
-        if (!controlled) return;
+        if (ManagerReferences.Instance.HexBuilder.BuildMode || ManagerReferences.Instance.UIManager.ShopGUIOpen || !controlled)
+        {
+            if (!unsubscribed)
+            {
+                rightClick.performed -= MoveCommand;
+                unsubscribed = true;
+            }
 
-        Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+            return;
+        }
+        
+        mousePos = mainCam.ScreenToWorldPoint(mousePosition.ReadValue<Vector2>());
         mousePos = new Vector3(mousePos.x, mousePos.y, -1f);
 
         Vector3 dir = (mousePos - transform.position).normalized;
         float rot = Mathf.Atan2(dir.y, dir.x);
 
         transform.rotation = Quaternion.Euler(0, 0, rot * Mathf.Rad2Deg - 90);
-        
-        if (Input.GetMouseButtonDown(1))
-        {
-            MoveCommand(mousePos);
-        }
+
+        rightClick.performed += MoveCommand;
+        unsubscribed = false;
     }
 
-    private void MoveCommand(Vector3 mousePos)
+    private void MoveCommand(InputAction.CallbackContext context)
     {
+        Vector3 mousePos = this.mousePos;
+        
         speed = .05f;
         
         controlled = false;
@@ -249,6 +270,13 @@ public class ShipUnitBehavior : ShipBehavior
         sr.color = targetColor;
     }
 
+    private void OnEnable()
+    {
+        mousePosition = playerControls.ShipControlActions.MousePosition;
+        rightClick = playerControls.ShipControlActions.MoveShip;
+        playerControls.ShipControlActions.Enable();
+    }
+
     private void OnDisable()
     {
         if (activeTaskObject != null)
@@ -258,5 +286,7 @@ public class ShipUnitBehavior : ShipBehavior
             else if (activeTaskObject.TryGetComponent<WorkshopHex>(out var workshopHex))
                 workshopHex.OnShipCreated -= SpawnShipCommandCompleted;
         }
+        
+        playerControls.ShipControlActions.Disable();
     }
 }

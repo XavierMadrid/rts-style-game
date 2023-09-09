@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
     private bool holdForExtraInfo = false; // OPTION
 
     public bool ExtendInfoToggle { get; private set; } = false;
-
+    public bool ShopGUIOpen { get; private set; } = false;
 
     public GameObject Canvas;
     
@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     private InputAction shift;
 
     [SerializeField] private TextMeshProUGUI gameTimeText = null;
+    [SerializeField] private RectTransform shopButtonManager = null;
     
     public event Action<bool> OnExtendInfoRequested;
 
@@ -30,6 +31,11 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         ManagerReferences.Instance.EnemyHandler.OnGameTimeChanged += GameTimeChanged;
+        shopButtonManager.GetComponent<GUIShopButtonBehavior>().OnShopGUIOpened += guiOpen =>
+        {
+            ShopGUIOpen = guiOpen;
+            Debug.Log($"shop opened: {guiOpen}");
+        };
     }
 
     void Update()
