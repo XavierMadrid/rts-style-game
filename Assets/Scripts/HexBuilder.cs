@@ -122,42 +122,6 @@ public class HexBuilder : MonoBehaviour
             
             leftClick.performed += PlaceSelectedHex;
             rightClick.performed += context => BuildMode = false;
-
-            // if (Input.GetMouseButtonDown(0))
-            // {
-            //     Hex hexPos = mousePos.ToHex();
-            //
-            //     if (IsHexOccupied(hexPos) || !HasNeighborHex(hexPos)) // check hex position viability
-            //     {
-            //         hexPlaceFailure = true;
-            //         return;
-            //     }
-            //
-            //     int pricesMet = 0;
-            //     foreach (var price in resourcePrices)
-            //     {
-            //         if (price.TryPurchaseWithResourcePrice()) pricesMet++;
-            //     }
-            //
-            //     if (pricesMet != resourcePrices.Length) // check if player can afford the resource prices
-            //     {
-            //         hexPlaceFailure = true;
-            //         return;
-            //     }
-            //     
-            //     for (int i = 0; i < pricesMet; i++) 
-            //     {
-            //         resourcePrices[i].Resource.AddAmountToResource(-resourcePrices[i].Cost);
-            //     }
-            //     
-            //     GameObject hexPlaced = Instantiate(hexPrefabSelected, hexPos.ToWorld(), Quaternion.identity);
-            //     OnHexPlaced(hexPos); 
-            // }
-            
-            // if (Input.GetMouseButtonDown(1))
-            // {
-            //     BuildMode = false;
-            // }
         }
 
         gateHexInputAction.performed += context => CreateBluePrintHex(GATE_HEX);
@@ -166,32 +130,6 @@ public class HexBuilder : MonoBehaviour
         goldmineHexInputAction.performed += context => CreateBluePrintHex(GOLDMINE_HEX);
         starCollectorHexInputAction.performed += context => CreateBluePrintHex(STAR_COLLECTOR_HEX);
         turretHexInputAction.performed += context => CreateBluePrintHex(TURRET_HEX);
-
-        // if (Input.GetKeyDown(GATE_HEX.KeyCode))
-        // {
-        //     BuildMode = true;
-        //     CreateBluePrintHex(GATE_HEX);
-        // }
-        // if (Input.GetKeyDown(POWER_HEX.KeyCode))
-        // {
-        //     BuildMode = true;
-        //     CreateBluePrintHex(POWER_HEX);
-        // }
-        // if (Input.GetKeyDown(WORKSHOP_HEX.KeyCode))
-        // {
-        //     BuildMode = true;
-        //     CreateBluePrintHex(WORKSHOP_HEX);
-        // }
-        // if (Input.GetKeyDown(GOLDMINE_HEX.KeyCode))
-        // {
-        //     BuildMode = true;
-        //     CreateBluePrintHex(GOLDMINE_HEX);
-        // }
-        // if (Input.GetKeyDown(STAR_COLLECTOR_HEX.KeyCode))
-        // {
-        //     BuildMode = true;
-        //     CreateBluePrintHex(STAR_COLLECTOR_HEX);
-        // }
     }
     
     private void CreateBluePrintHex(HexTileType hexType)
@@ -267,7 +205,7 @@ public class HexBuilder : MonoBehaviour
 
         if (isDisableable)
         {
-            Debug.Log("disableable");
+            Debug.Log("disableable placed.");
             DisableableHexPosDict.Add(hexPos, hexObject);
             OnDisableableHexPlaced?.Invoke(hexPos, hexObject);
         }
