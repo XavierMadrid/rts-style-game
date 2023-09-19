@@ -11,9 +11,17 @@ public class GUIShopButtonBehavior : MonoBehaviour
     [SerializeField] private GameObject shopGUI = null;
 
     private bool doubleClickTimeActive = false;
-    private WaitForSeconds doubleClickDelay = new (.5f);
+    private WaitForSeconds doubleClickDelay = new(.5f);
 
     public event Action<bool> OnShopGUIOpened;
+
+    public void OpenShop(bool shopOpened)
+    {
+        shopGUI.SetActive(shopOpened);
+        shopActive = shopOpened;
+
+        OnShopGUIOpened?.Invoke(shopActive);
+    }
 
     public void ShopButtonClicked()
     {
@@ -32,7 +40,7 @@ public class GUIShopButtonBehavior : MonoBehaviour
     private IEnumerator ClickDelay()
     {
         doubleClickTimeActive = true;
-        
+
         yield return doubleClickDelay;
 
         doubleClickTimeActive = false;

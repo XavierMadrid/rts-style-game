@@ -359,6 +359,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenShop"",
+                    ""type"": ""Button"",
+                    ""id"": ""8257f3ef-b369-41bb-b6a1-52c42ae7a834"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -370,6 +379,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""DisplayExtraInfo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b2367be2-e081-48db-87e0-7f62b8778f6e"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenShop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -402,6 +422,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         // UIActions
         m_UIActions = asset.FindActionMap("UIActions", throwIfNotFound: true);
         m_UIActions_DisplayExtraInfo = m_UIActions.FindAction("DisplayExtraInfo", throwIfNotFound: true);
+        m_UIActions_OpenShop = m_UIActions.FindAction("OpenShop", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -698,11 +719,13 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UIActions;
     private List<IUIActionsActions> m_UIActionsActionsCallbackInterfaces = new List<IUIActionsActions>();
     private readonly InputAction m_UIActions_DisplayExtraInfo;
+    private readonly InputAction m_UIActions_OpenShop;
     public struct UIActionsActions
     {
         private @PlayerControls m_Wrapper;
         public UIActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @DisplayExtraInfo => m_Wrapper.m_UIActions_DisplayExtraInfo;
+        public InputAction @OpenShop => m_Wrapper.m_UIActions_OpenShop;
         public InputActionMap Get() { return m_Wrapper.m_UIActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -715,6 +738,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @DisplayExtraInfo.started += instance.OnDisplayExtraInfo;
             @DisplayExtraInfo.performed += instance.OnDisplayExtraInfo;
             @DisplayExtraInfo.canceled += instance.OnDisplayExtraInfo;
+            @OpenShop.started += instance.OnOpenShop;
+            @OpenShop.performed += instance.OnOpenShop;
+            @OpenShop.canceled += instance.OnOpenShop;
         }
 
         private void UnregisterCallbacks(IUIActionsActions instance)
@@ -722,6 +748,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @DisplayExtraInfo.started -= instance.OnDisplayExtraInfo;
             @DisplayExtraInfo.performed -= instance.OnDisplayExtraInfo;
             @DisplayExtraInfo.canceled -= instance.OnDisplayExtraInfo;
+            @OpenShop.started -= instance.OnOpenShop;
+            @OpenShop.performed -= instance.OnOpenShop;
+            @OpenShop.canceled -= instance.OnOpenShop;
         }
 
         public void RemoveCallbacks(IUIActionsActions instance)
@@ -766,5 +795,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     public interface IUIActionsActions
     {
         void OnDisplayExtraInfo(InputAction.CallbackContext context);
+        void OnOpenShop(InputAction.CallbackContext context);
     }
 }

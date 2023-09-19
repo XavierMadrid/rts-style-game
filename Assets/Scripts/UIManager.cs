@@ -14,15 +14,17 @@ public class UIManager : MonoBehaviour
     public bool ShopGUIOpen { get; private set; } = false;
 
     public GameObject Canvas;
+    private GUIShopButtonBehavior shopButtonBehaviorcs; 
     
     private PlayerControls playerControls;
-    private InputAction shift;
+    private InputAction displayExtraInfoAction;
+    private InputAction openShopAction;
 
     [SerializeField] private TextMeshProUGUI gameTimeText = null;
     [SerializeField] private RectTransform shopButtonManager = null;
     
     public event Action<bool> OnExtendInfoRequested;
-
+    
     private void Awake()
     {
         playerControls = new PlayerControls();
@@ -31,10 +33,12 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         ManagerReferences.Instance.EnemyHandler.OnGameTimeChanged += GameTimeChanged;
-        shopButtonManager.GetComponent<GUIShopButtonBehavior>().OnShopGUIOpened += guiOpen =>
+        ManagerReferences.Instance.HexBuilder.OnHexBluePrintCreated += HexBluePrintCreated;
+
+        shopButtonBehaviorcs = shopButtonManager.GetComponent<GUIShopButtonBehavior>();
+        shopButtonBehaviorcs.OnShopGUIOpened += guiOpen =>
         {
             ShopGUIOpen = guiOpen;
-            Debug.Log($"shop opened: {guiOpen}");
         };
     }
 
@@ -42,15 +46,22 @@ public class UIManager : MonoBehaviour
     {
         if (holdForExtraInfo)
         {
-            shift.performed += context => OnExtendInfoRequested?.Invoke(true);
-            shift.canceled += context => OnExtendInfoRequested?.Invoke(false);
+            displayExtraInfoAction.performed += context => OnExtendInfoRequested?.Invoke(true);
+            displayExtraInfoAction.canceled += context => OnExtendInfoRequested?.Invoke(false);
         }
         else
         {
-            shift.performed += RequestExtendedInfoToggle;
+            displayExtraInfoAction.performed += RequestExtendedInfoToggle;
         }
-    }
 
+        openShopAction.performed += OpenShopAction;
+    }
+    
+    // blue prints created through double clicking shop hex icons
+    private void HexBluePrintCreated() => shopButtonBehaviorcs.OpenShop(false);
+
+    private void OpenShopAction(InputAction.CallbackContext context) => shopButtonBehaviorcs.ShopButtonClicked();
+    
     private void RequestExtendedInfoToggle(InputAction.CallbackContext context)
     {
         ExtendInfoToggle = !ExtendInfoToggle;
@@ -59,7 +70,8 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        shift = playerControls.UIActions.DisplayExtraInfo;
+        displayExtraInfoAction = playerControls.UIActions.DisplayExtraInfo;
+        openShopAction = playerControls.UIActions.OpenShop;
         playerControls.UIActions.Enable();
     }
 
@@ -77,5 +89,6 @@ public class UIManager : MonoBehaviour
     {
         playerControls.UIActions.Disable();
         ManagerReferences.Instance.EnemyHandler.OnGameTimeChanged -= GameTimeChanged;
+        ManagerReferences.Instance.HexBuilder.OnHexBluePrintCreated -= HexBluePrintCreated;
     }
 }
