@@ -251,12 +251,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hotbarHexIcons:
-  - {fileID: 589543036}
-  - {fileID: 196036191}
-  - {fileID: 1835409719}
-  - {fileID: 1702140716}
-  - {fileID: 397760436}
-  - {fileID: 7389319}
+  - {fileID: 589543037}
+  - {fileID: 196036192}
+  - {fileID: 1835409720}
+  - {fileID: 1702140717}
+  - {fileID: 397760437}
+  - {fileID: 7389320}
+  hexListButtonManager: {fileID: 1180525713}
+  shopButtonManager: {fileID: 1567031826}
 --- !u!58 &8298875
 CircleCollider2D:
   m_ObjectHideFlags: 0
