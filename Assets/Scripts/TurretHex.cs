@@ -6,20 +6,23 @@ using UnityEngine;
 
 public class TurretHex : EnergyHex
 {
-    private readonly Color poweredColor = new(1, 0.8366f, 0, 1f);
+    protected Color ActiveColor = new(1, 0.8366f, 0, 1f);
+    protected Color DefaultColor = HexBuilder.TURRET_HEX.HexColor;
+    
+    protected int StartingHealth = 7;
+    protected int HealthPerSec = 1;
     
     private SpriteRenderer sr;
-    private TurretHexShootBehavior turretHexsb;
+    private ShootBehavior shootBehaviorcs;
 
     private bool energySupplied;
     
     protected override void Start()
     {
         sr = GetComponent<SpriteRenderer>();
-        turretHexsb = GetComponent<TurretHexShootBehavior>();
-
+        shootBehaviorcs = GetComponent<ShootBehavior>();
         
-        StartCoroutine(PassiveHealthRegen());
+        StartCoroutine(PassiveHealthRegen(StartingHealth, HealthPerSec));
         
         base.Start();
     }
@@ -28,6 +31,35 @@ public class TurretHex : EnergyHex
     {
         energySupplied = value;
         ObjectTargetable(value);
+    }
+
+    protected override void ObjectTargetable(bool isTargetable)
+    {
+        if (isTargetable != Disabled) return;
+
+        if (isTargetable)
+        {
+            if (energySupplied && HealthPositive)
+            {
+                shootBehaviorcs.enabled = true;
+                Debug.Log("Enabled");
+                // Debug.Log($"ObjectTargetable({isTargetable}): energySupplied: {energySupplied}, AtMaxHealth: {HealthPositive}, Disabled: {Disabled}; true");
+                base.ObjectTargetable(true);
+                
+                StartCoroutine(FadeToColor(DefaultColor, ActiveColor));
+            }
+            // fall through
+        }
+        else
+        {
+            shootBehaviorcs.enabled = false;
+            Debug.Log("disabled");
+            base.ObjectTargetable(false);
+            
+            // Debug.Log($"ObjectTargetable({isTargetable}): energySupplied: {energySupplied}, AtMaxHealth: {HealthPositive}, Disabled: {Disabled}; false");
+
+            StartCoroutine(FadeToColor(ActiveColor, DefaultColor));
+        }
     }
 
     private IEnumerator FadeToColor(Color startColor, Color targetColor)
@@ -42,51 +74,5 @@ public class TurretHex : EnergyHex
             yield return null;
         }
         sr.color = targetColor;
-    }
-    
-    protected override void ObjectTargetable(bool isTargetable)
-    {
-        if (isTargetable)
-        {
-            if (energySupplied && HealthPositive)
-            {
-                if (Disabled)
-                {
-                    turretHexsb.enabled = true;
-                    base.ObjectTargetable(true);
-                    
-                    Debug.Log($"ObjectTargetable({isTargetable}): energySupplied: {energySupplied}, AtMaxHealth: {HealthPositive}, Disabled: {Disabled}; true");
-
-                    StartCoroutine(FadeToColor(HexBuilder.TURRET_HEX.HexColor, poweredColor));
-                }
-            }
-        }
-        else if (!Disabled)
-        {
-            turretHexsb.enabled = false;
-            base.ObjectTargetable(false);
-            
-            Debug.Log($"ObjectTargetable({isTargetable}): energySupplied: {energySupplied}, AtMaxHealth: {HealthPositive}, Disabled: {Disabled}; false");
-            
-            StartCoroutine(FadeToColor(poweredColor, HexBuilder.TURRET_HEX.HexColor));
-        }
-        
-        
-        
-        
-        // if (energySupplied && HealthPositive && Disabled)
-        // {
-        //     turretHexsb.enabled = true;
-        //     base.ObjectTargetable(true);
-        //     
-        //     StartCoroutine(FadeToColor(HexBuilder.TURRET_HEX.HexColor, poweredColor));
-        // }
-        // else if ((!energySupplied || !HealthPositive) && !Disabled)
-        // {
-        //     turretHexsb.enabled = false;
-        //     base.ObjectTargetable(false);
-        //     
-        //     StartCoroutine(FadeToColor(poweredColor, HexBuilder.TURRET_HEX.HexColor));
-        // }
     }
 }

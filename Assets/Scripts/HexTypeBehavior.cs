@@ -8,8 +8,7 @@ public class HexTypeBehavior : Targetable
 {
     protected bool HealthPositive;
     
-    private readonly int healthPerSec = 1;
-    protected readonly int MaxHealth = 10;
+    protected int MaxHealth = 10;
 
     private WaitForSeconds oneSec = new(1);
     
@@ -19,13 +18,9 @@ public class HexTypeBehavior : Targetable
         get => health;
         
         /* Targetability of a hex due to health is as follows:
-            
-            Hexes regenerate healthPerSec (default is 1) health per second.
-            
-            A hex starts as targetable. A hex stays targetable as long as its health stays > 0. 
-            
-            When health drops to 0, the hex becomes untargetable. It stays untargetable unless health reaches MaxHealth again.
-        
+             - Hexes regenerate healthPerSec (default is 1) health per second.
+             - A hex starts as targetable. A hex stays targetable as long as its health stays > 0.   
+             - When health drops to 0, the hex becomes untargetable. It stays untargetable unless health reaches MaxHealth again.
         */
         private set
         {
@@ -65,9 +60,9 @@ public class HexTypeBehavior : Targetable
         Health -= damage;
     }
     
-    protected IEnumerator PassiveHealthRegen()
+    protected IEnumerator PassiveHealthRegen(int startingHealth, int healthPerSec)
     {
-        Health = 0;
+        Health = startingHealth;
         while (gameObject != null)
         {
             Health += healthPerSec;

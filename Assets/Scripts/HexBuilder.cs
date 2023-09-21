@@ -24,35 +24,39 @@ public class HexBuilder : MonoBehaviour
     private InputAction hexSlot5InputAction;
     private InputAction hexSlot6InputAction;
 
-    private static readonly Color CenterHexColor = new(.729f, .820f, 1, 1);
+    private static readonly Color CenterHexColor = new(.729f, .820f, 1f, 1f);
     private static readonly Color GateHexColor = new(.3208f, .3208f, .3208f, .6471f);
     private static readonly Color PowerHexColor = new(0, 0.3589f, 0.6226f, 1f);
-    private static readonly Color WorkshopHexColor = new(.0218f, 0.3019f, 0, 1);
-    private static readonly Color GoldmineHexColor = new(1, .733f, 0, 1);
-    private static readonly Color StarCollectorHexColor = new(.71f, .286f, 0, 1);
-    private static readonly Color TurretHexColor = new(.6f, .5f, 0, 1);
-
+    private static readonly Color WorkshopHexColor = new(.0218f, 0.3019f, 0, 1f);
+    private static readonly Color GoldmineHexColor = new(1f, .673f, 0, 1f);
+    private static readonly Color StarCollectorHexColor = new(.71f, .286f, 0, 1f);
+    private static readonly Color TurretHexColor = new(.6f, .5f, 0, 1f);
+    private static readonly Color MissileHexColor = new(0.6604f, 0.4790f, 0.2523f, 1f);
+    
     public static readonly HexTileType CENTER_HEX = new("Center Hex", CenterHexColor, 0, null, true, true);
     
     public static readonly HexTileType GATE_HEX = new("Connector Hex",  GateHexColor, 1, 
-        new ResourcePrice[] {new(ResourceManager.METAL, 30)});
+        new ResourcePrice[] { new(ResourceManager.METAL, 30) });
     
     public static readonly HexTileType POWER_HEX = new("Power Hex", PowerHexColor, 2,
-        new ResourcePrice[] {new(ResourceManager.METAL, 200), new(ResourceManager.ENERGY, 120)}, true);
+        new ResourcePrice[] { new(ResourceManager.METAL, 200), new(ResourceManager.ENERGY, 120)}, true);
     
     public static readonly HexTileType WORKSHOP_HEX = new("Workshop Hex", WorkshopHexColor, 3, 
-        new ResourcePrice[] {new(ResourceManager.METAL, 180), new(ResourceManager.GREENERY, 60)});
+        new ResourcePrice[] { new(ResourceManager.METAL, 180), new(ResourceManager.GREENERY, 60)});
     
     public static readonly HexTileType GOLDMINE_HEX = new("Golden Hex",  GoldmineHexColor, 4, 
-        new ResourcePrice[] {new(ResourceManager.METAL, 300)});
+        new ResourcePrice[] { new(ResourceManager.METAL, 300) });
     
     public static readonly HexTileType STAR_COLLECTOR_HEX = new("Star Collector Hex",  StarCollectorHexColor, 5, 
-        new ResourcePrice[] {new(ResourceManager.METAL, 200)}, true);
+        new ResourcePrice[] { new(ResourceManager.METAL, 200) }, true);
     
     public static readonly HexTileType TURRET_HEX = new("Turret Hex",  TurretHexColor, 6, 
-        new ResourcePrice[] {new(ResourceManager.METAL, 200), new(ResourceManager.GOLD, 60)}, true, true);
+        new ResourcePrice[] { new(ResourceManager.METAL, 200), new(ResourceManager.GOLD, 60) }, true, true);
 
-    public static readonly HexTileType[] HEX_TILE_TYPES = {CENTER_HEX, GATE_HEX, POWER_HEX, WORKSHOP_HEX, GOLDMINE_HEX, STAR_COLLECTOR_HEX, TURRET_HEX };
+    public static readonly HexTileType MISSILE_HEX = new("Missile Hex", MissileHexColor, 7,
+        new ResourcePrice[] { new(ResourceManager.METAL, 200), new(ResourceManager.GOLD, 80) }, true, true);
+
+    public static readonly HexTileType[] HEX_TILE_TYPES = {CENTER_HEX, GATE_HEX, POWER_HEX, WORKSHOP_HEX, GOLDMINE_HEX, STAR_COLLECTOR_HEX, TURRET_HEX, MISSILE_HEX };
     
     [FormerlySerializedAs("hexPrefabs")] [FormerlySerializedAs("hexTypes")] [SerializeField] private GameObject[] hexTileTypePrefabs;
 

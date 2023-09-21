@@ -19,7 +19,9 @@ public class TurretHexShootBehavior : ShootBehavior
 
     private void Awake()
     {
-        ShootCd = 1;
+        ShootCd = 1f;
+        Damage = 1;
+        Range = 50f;
         enabled = false;
     }
 
@@ -31,10 +33,6 @@ public class TurretHexShootBehavior : ShootBehavior
 
     protected override void Shoot(Transform target, int damage, float shotAngle)
     {
-        damage = 1;
-        Vector3 dir = target.position - transform.position;
-        shotAngle = Mathf.Atan2(dir.y, dir.x);
-
         if (ResourceManager.ENERGY.AttemptPurchase(energyDrain))
         {
             ResourceManager.ENERGY.AddAmountToResource(-energyDrain);

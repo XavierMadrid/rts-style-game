@@ -28,6 +28,7 @@ public class EnergyHex : HexTypeBehavior
     
     protected virtual void Start()
     {
+        ObjectTargetable(false);
         transformHexPos = transform.position.ToHex();
         
         InitialSearchForLinks();

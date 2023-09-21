@@ -49,7 +49,7 @@ public class EnemyShipBehavior : ShipBehavior
     {
         float scalar = 1;
         float maxDist = 550f;
-        float dist = Vector3.Distance(transform.position, ManagerReferences.Instance.HexBuilder.CenterHex.transform.position);
+        float dist = Vector3.Distance(transform.position, Vector3.zero);
 
         weight = scalar * dist / maxDist * 100;
 

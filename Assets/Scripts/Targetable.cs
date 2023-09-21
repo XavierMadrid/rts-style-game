@@ -21,9 +21,5 @@ public abstract class Targetable : MonoBehaviour
     {
         Disabled = !isTargetable;
         OnObjectTargetable?.Invoke(gameObject, isTargetable);
-        if (Disabled == isTargetable)
-        {
-            
-        }
     }
 }

@@ -11,21 +11,7 @@ public abstract class ShootBehavior : MonoBehaviour
     private GameObject closestTarget;
         
     protected float ShootDelay = 2f; // time between shots
-
-    private bool targetDeadVar;
-    private bool targetDead // disabled hexes are dead as well
-    {
-        get => targetDeadVar;
-        set
-        {
-            Debug.Log("targetDead changed to " + value);
-            targetDeadVar = value;
-        }
-    }
-    private bool shotReady;
-    private float changedTargetShootDelay = .5f;
-    private float shootCdTime;
-    private readonly float rotSpeed = 200f;
+    protected int Damage = 0;
     protected float Range = 30f;
     public float CurrentRange
     {
@@ -42,7 +28,22 @@ public abstract class ShootBehavior : MonoBehaviour
             }
         }
     }
-    
+
+    private bool targetDeadVar;
+    private bool targetDead // disabled hexes are dead as well
+    {
+        get => targetDeadVar;
+        set
+        {
+            Debug.Log("targetDead changed to " + value);
+            targetDeadVar = value;
+        }
+    }
+    private bool shotReady;
+    private float changedTargetShootDelay = .5f;
+    private float shootCdTime;
+    private readonly float rotSpeed = 250f;
+
     private WaitForSeconds searchDelayInterval = new(.05f);
 
     public event Action<GameObject, float> OnShipTargetFound;
@@ -129,7 +130,7 @@ public abstract class ShootBehavior : MonoBehaviour
             {
                 Debug.Log($"{gameObject}: targetDead = {targetDead}, target = {closestTarget}");
                 
-                Shoot(closestTarget.transform, 0, transform.rotation.eulerAngles.z); // Shoot!
+                Shoot(closestTarget.transform, Damage, transform.rotation.eulerAngles.z); // Shoot!
                 
                 shootCdTime = ShootDelay; // 2 secs
                 shotReady = false;
@@ -169,6 +170,9 @@ public abstract class ShootBehavior : MonoBehaviour
     {
         Vector3 pos = transform.position;
         Vector3 spawnPos = new Vector3(pos.x, pos.y, -2);
+        
+        Vector3 dir = target.position - pos;
+        shotAngle = Mathf.Atan2(dir.y, dir.x);             
         
         GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
         
